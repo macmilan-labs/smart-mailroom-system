@@ -1,0 +1,514 @@
+{% extends "base.html" %}
+{% block content %}
+<script>document.body.dataset.username = "{{ user.username }}";</script>
+
+<div class="max-w-[1600px] mx-auto w-full animate-enter">
+
+    <!-- â”€â”€ Welcome Hero â”€â”€ -->
+    <section
+        class="mb-10 relative overflow-hidden rounded-[3rem] bg-[#161618] p-12 md:p-16 border border-white/5 shadow-2xl">
+        <div class="absolute top-0 right-0 -mt-20 -mr-20 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[120px]">
+        </div>
+        <div class="absolute bottom-0 left-0 -mb-20 -ml-20 w-96 h-96 bg-primary/5 rounded-full blur-[100px]"></div>
+
+        <div class="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-12">
+            <div class="flex-1">
+                <div
+                    class="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-primary/10 border border-primary/20 text-primary text-[10px] font-black uppercase tracking-[0.2em] mb-6">
+                    <span class="w-1.5 h-1.5 bg-primary rounded-full animate-pulse"></span>
+                    Student Portal Active
+                </div>
+                <h2 class="font-display-xl text-6xl md:text-7xl text-white mb-6 tracking-tighter">Welcome back, <span
+                        class="text-primary">{{ user.username|capitalize }}</span>.</h2>
+                <p class="font-body-lg text-xl text-zinc-500 max-w-2xl leading-relaxed">
+                    Your secure logistics hub is synchronized. You have <span class="text-white font-bold">{{
+                        arrived_count }} items</span> ready for biometric verification and collection at the Main Hub.
+                </p>
+
+                <!-- Content Spacing Rebalance -->
+                <div class="mt-8"></div>
+            </div>
+
+            <div class="hidden xl:flex items-center justify-center">
+                <div class="relative w-96 h-[350px]">
+                    <!-- Glow effect -->
+                    <div id="securityGlow"
+                        class="absolute inset-0 {% if user.face_encoding and user.fingerprint_id %}bg-emerald-500/10{% else %}bg-amber-500/10{% endif %} rounded-[3rem] blur-2xl animate-pulse">
+                    </div>
+
+                    <div class="relative w-full h-full glass-card rounded-[3rem] border {% if user.face_encoding and user.fingerprint_id %}border-emerald-500/20{% else %}border-amber-500/20{% endif %} p-10 flex flex-col justify-center"
+                        id="securityCardContainer">
+
+                        <!-- Header -->
+                        <div class="flex justify-between items-start mb-8">
+                            <div>
+                                <h3 class="text-[10px] font-black text-zinc-500 uppercase tracking-widest mb-2">Security
+                                    Status</h3>
+                                <div class="flex items-center gap-2">
+                                    <span
+                                        class="w-2 h-2 rounded-full {% if user.face_encoding and user.fingerprint_id %}bg-emerald-500 shadow-[0_0_12px_rgba(16,185,129,0.8)]{% else %}bg-amber-500 shadow-[0_0_12px_rgba(245,158,11,0.8)]{% endif %}"></span>
+                                    <p class="text-xl font-bold text-white tracking-tight">Identity Verified</p>
+                                </div>
+                            </div>
+                            <div id="securityStatusIcon"
+                                class="p-2 {% if user.face_encoding and user.fingerprint_id %}bg-emerald-500/10 text-emerald-500{% else %}bg-amber-500/10 text-amber-500{% endif %} rounded-xl border border-current/20">
+                                <span class="material-symbols-outlined text-2xl" id="mainStatusIcon">
+                                    {% if user.face_encoding and user.fingerprint_id %}verified{% else %}lock_open{%
+                                    endif %}
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Info Rows -->
+                        <div class="space-y-4">
+                            <div class="flex justify-between items-center group/row">
+                                <div class="flex items-center gap-3">
+                                    <span
+                                        class="material-symbols-outlined text-zinc-500 text-lg group-hover/row:text-primary transition-colors">face</span>
+                                    <span class="text-[10px] font-bold text-zinc-400 uppercase tracking-[0.2em]">Face
+                                        Scan</span>
+                                </div>
+                                <span id="cardFaceStatus"
+                                    class="text-[10px] font-black {% if user.face_encoding %}text-emerald-500{% else %}text-zinc-600{% endif %} uppercase tracking-widest">
+                                    {% if user.face_encoding %}Enrolled{% else %}Not Enrolled{% endif %}
+                                </span>
+                            </div>
+                            <div class="flex justify-between items-center group/row">
+                                <div class="flex items-center gap-3">
+                                    <span
+                                        class="material-symbols-outlined text-zinc-500 text-lg group-hover/row:text-primary transition-colors">fingerprint</span>
+                                    <span
+                                        class="text-[10px] font-bold text-zinc-400 uppercase tracking-[0.2em]">Fingerprint</span>
+                                </div>
+                                <span id="cardFingerStatus"
+                                    class="text-[10px] font-black {% if user.fingerprint_id %}text-emerald-500{% else %}text-amber-500{% endif %} uppercase tracking-widest">
+                                    {% if user.fingerprint_id %}Enrolled{% else %}Setup Needed{% endif %}
+                                </span>
+                            </div>
+                            <div class="flex justify-between items-center group/row">
+                                <div class="flex items-center gap-3">
+                                    <span
+                                        class="material-symbols-outlined text-zinc-500 text-lg group-hover/row:text-primary transition-colors">schedule</span>
+                                    <span
+                                        class="text-[10px] font-bold text-zinc-400 uppercase tracking-[0.2em]">Session</span>
+                                </div>
+                                <span class="text-[10px] font-black text-white uppercase tracking-widest">
+                                    {{ now[6:8] }}/{{ now[4:6] }} â€¢ {{ now[8:10] }}:{{ now[10:12] }}
+                                </span>
+                            </div>
+                            <div class="flex justify-between items-center group/row">
+                                <div class="flex items-center gap-3">
+                                    <span
+                                        class="material-symbols-outlined text-zinc-500 text-lg group-hover/row:text-primary transition-colors">shield</span>
+                                    <span
+                                        class="text-[10px] font-bold text-zinc-400 uppercase tracking-[0.2em]">Level</span>
+                                </div>
+                                <span class="text-[10px] font-black text-primary uppercase tracking-widest">Student Tier
+                                    1</span>
+                            </div>
+                        </div>
+
+                        <!-- Background icon -->
+                        <span
+                            class="absolute -bottom-12 -right-12 material-symbols-outlined text-[12rem] text-white/[0.02] pointer-events-none -rotate-12"
+                            data-icon="security">security</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- â”€â”€ Dash Content â”€â”€ -->
+    <div class="flex flex-col lg:flex-row gap-8 w-full">
+
+        <!-- Left: Parcels & History -->
+        <div class="flex-grow w-full lg:w-2/3 2xl:w-3/4 space-y-10 min-w-0">
+
+            <!-- Awaiting Collection -->
+            <div class="space-y-8">
+                <div class="flex items-center justify-between px-4">
+                    <div>
+                        <h3 class="font-headline-md text-3xl text-white font-bold tracking-tight">Active Deliveries</h3>
+                        <p class="text-sm text-zinc-500 mt-1">Items currently held in the secure automated lockers.</p>
+                    </div>
+                    <div class="flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-xl border border-primary/20">
+                        <span class="text-primary text-xs font-black uppercase tracking-widest">{{ arrived_count }}
+                            Pending</span>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    {% for parcel in parcels if parcel.status == 'Arrived' %}
+                    <div
+                        class="glass-card rounded-[3rem] p-10 group hover:border-primary/30 transition-all duration-700 border border-white/5 relative overflow-hidden shadow-xl">
+                        <div
+                            class="absolute top-0 right-0 w-40 h-40 bg-primary/5 rounded-full blur-[60px] -mr-20 -mt-20 group-hover:bg-primary/10 transition-all">
+                        </div>
+
+                        <div class="flex justify-between items-start mb-10 relative z-10">
+                            <div
+                                class="w-16 h-16 bg-white rounded-3xl flex items-center justify-center shadow-2xl group-hover:scale-110 transition-transform">
+                                <span class="material-symbols-outlined text-zinc-900 text-4xl">package_2</span>
+                            </div>
+                            <div class="text-right">
+                                <p
+                                    class="text-[10px] text-zinc-500 font-black uppercase tracking-widest leading-none mb-1">
+                                    Global Tracking</p>
+                                <p class="text-sm font-bold text-white font-mono uppercase tracking-tighter">#{{
+                                    parcel.id }}</p>
+                            </div>
+                        </div>
+
+                        <div class="space-y-8 relative z-10">
+                            <div class="grid grid-cols-2 gap-6 py-6 border-y border-white/5">
+                                <div class="space-y-1">
+                                    <p class="text-[10px] text-zinc-500 font-black uppercase tracking-widest">Arrival
+                                    </p>
+                                    <p class="text-sm font-bold text-white">{{ parcel.created_at.strftime('%H:%M %p') if
+                                        parcel.created_at else 'Active' }}</p>
+                                </div>
+                                <div class="space-y-1">
+                                    <p class="text-[10px] text-zinc-500 font-black uppercase tracking-widest">Location
+                                    </p>
+                                    <p class="text-sm font-bold text-primary">Main Hub-B12</p>
+                                </div>
+                            </div>
+
+                            <!-- OTP Display -->
+                            <div
+                                class="bg-primary/5 border border-primary/10 rounded-[2rem] p-6 text-center group-hover:bg-primary/10 transition-colors shadow-inner">
+                                <p class="text-[10px] font-black text-primary/60 uppercase tracking-[0.3em] mb-3">
+                                    Collection Passcode</p>
+                                <p class="text-5xl font-black text-white tracking-[0.3em] font-mono leading-none">{{
+                                    parcel.current_otp }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    {% else %}
+                    <div
+                        class="col-span-full py-24 text-center border-2 border-dashed border-white/5 rounded-[3rem] bg-white/[0.01]">
+                        <div
+                            class="w-20 h-20 bg-white/5 rounded-full flex items-center justify-center mx-auto mb-6 text-zinc-700">
+                            <span class="material-symbols-outlined text-4xl">inbox</span>
+                        </div>
+                        <p class="text-xl font-bold text-zinc-500">Zero pending collections.</p>
+                        <p class="text-sm text-zinc-600 mt-2">All incoming items have been processed.</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Collection History -->
+            <div class="pt-6">
+                <div class="flex items-center justify-between px-4 mb-8">
+                    <h3 class="font-headline-md text-3xl text-white font-bold tracking-tight">Recent History</h3>
+                    <button class="text-primary text-xs font-bold uppercase tracking-widest hover:underline">View Full
+                        Archive</button>
+                </div>
+                <div class="glass-card rounded-[3rem] overflow-hidden border border-white/5 shadow-2xl">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left">
+                            <thead>
+                                <tr class="bg-white/[0.02] border-b border-white/5">
+                                    <th
+                                        class="px-10 py-6 text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em]">
+                                        Asset Information</th>
+                                    <th
+                                        class="px-10 py-6 text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em]">
+                                        Timeline</th>
+                                    <th
+                                        class="px-10 py-6 text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em] text-right">
+                                        Verification</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-white/5">
+                                {% for parcel in parcels if parcel.status != 'Arrived' %}
+                                <tr class="hover:bg-white/[0.03] transition-all group">
+                                    <td class="px-10 py-8">
+                                        <div class="flex items-center gap-5">
+                                            <div
+                                                class="w-12 h-12 rounded-2xl bg-zinc-900 border border-white/5 flex items-center justify-center group-hover:scale-110 transition-transform">
+                                                <span
+                                                    class="material-symbols-outlined text-zinc-500 text-2xl">package_2</span>
+                                            </div>
+                                            <div>
+                                                <p class="text-base font-bold text-white tracking-tight">Parcel Handover
+                                                </p>
+                                                <p
+                                                    class="text-[10px] text-zinc-600 font-mono tracking-widest uppercase mt-0.5">
+                                                    ID: #{{ parcel.id }}</p>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-10 py-8">
+                                        <p class="text-sm font-bold text-zinc-300">{{ parcel.created_at.strftime('%b %d,
+                                            %Y') if parcel.created_at else 'N/A' }}</p>
+                                        <p class="text-[10px] text-zinc-600 font-medium uppercase mt-0.5">{{
+                                            parcel.created_at.strftime('%H:%M') if parcel.created_at else 'System Log'
+                                            }}</p>
+                                    </td>
+                                    <td class="px-10 py-8 text-right">
+                                        {% if parcel.status == 'Pending' %}
+                                        <span
+                                            class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-500/10 text-amber-500 text-[10px] font-black uppercase tracking-widest border border-amber-500/20">
+                                            <span class="w-1.5 h-1.5 bg-amber-500 rounded-full status-pulse"></span>
+                                            Processing
+                                        </span>
+                                        {% else %}
+                                        <span
+                                            class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-secondary/10 text-secondary text-[10px] font-black uppercase tracking-widest border border-secondary/20">
+                                            <span class="w-1.5 h-1.5 bg-secondary rounded-full"></span>
+                                            Verified
+                                        </span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% else %}
+                                <tr>
+                                    <td colspan="3" class="px-10 py-24 text-center text-zinc-600 font-bold italic">No
+                                        encrypted collection logs found in this cycle.</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right: Widgets -->
+        <!-- Right: Security & Metrics -->
+        <div class="w-full lg:w-[380px] space-y-10 shrink-0">
+
+            <!-- Security Widget -->
+            <div class="glass-card rounded-[3rem] p-10 border border-white/5 relative overflow-hidden group shadow-2xl">
+                <div class="absolute top-0 right-0 w-48 h-48 bg-primary/5 rounded-full blur-[80px] -mr-24 -mt-24"></div>
+
+                <h3 class="text-[10px] font-black text-white uppercase tracking-[0.3em] mb-10 flex items-center gap-3">
+                    <span class="material-symbols-outlined text-primary text-xl">verified_user</span>
+                    Security Context
+                </h3>
+
+                <div class="space-y-6 relative z-10" id="securityContextContainer">
+                    <!-- Face ID Tile -->
+                    <div id="faceTile"
+                        class="flex items-center gap-6 p-6 bg-white/[0.03] rounded-[2rem] border {% if user.face_encoding %}border-emerald-500/10 hover:border-emerald-500/30{% else %}border-amber-500/10 hover:border-amber-500/30{% endif %} transition-all group/item">
+                        <div
+                            class="w-14 h-14 shrink-0 rounded-2xl {% if user.face_encoding %}bg-emerald-500/10 border-emerald-500/10{% else %}bg-amber-500/10 border-amber-500/10{% endif %} flex items-center justify-center border shadow-lg transition-all">
+                            <span
+                                class="material-symbols-outlined {% if user.face_encoding %}text-emerald-500{% else %}text-amber-500{% endif %} text-3xl">face</span>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <p class="text-base font-bold text-white tracking-tight">Face ID</p>
+                            <p id="faceTileStatus"
+                                class="text-[10px] {% if user.face_encoding %}text-emerald-500{% else %}text-amber-500{% endif %} font-black uppercase tracking-widest mt-0.5 truncate">
+                                {% if user.face_encoding %}Enrolled{% else %}Not Enrolled{% endif %}
+                            </p>
+                        </div>
+                        <button onclick="manageBio('face')"
+                            class="shrink-0 text-[10px] font-black bg-white/5 text-white/70 border border-white/10 px-6 py-3 rounded-xl hover:bg-white/10 hover:text-white transition-all uppercase tracking-widest shadow-xl">Setup</button>
+                    </div>
+
+                    <!-- Fingerprint Tile -->
+                    <div id="fingerTile"
+                        class="flex items-center gap-6 p-6 bg-white/[0.03] rounded-[2rem] border {% if user.fingerprint_id %}border-emerald-500/10 hover:border-emerald-500/30{% else %}border-amber-500/10 hover:border-amber-500/30{% endif %} transition-all group/item">
+                        <div
+                            class="w-14 h-14 shrink-0 rounded-2xl {% if user.fingerprint_id %}bg-emerald-500/10 border-emerald-500/10{% else %}bg-amber-500/10 border-amber-500/10{% endif %} flex items-center justify-center border shadow-lg transition-all">
+                            <span
+                                class="material-symbols-outlined {% if user.fingerprint_id %}text-emerald-500{% else %}text-amber-500{% endif %} text-3xl">fingerprint</span>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <p class="text-base font-bold text-white tracking-tight">Fingerprint</p>
+                            <p id="fingerTileStatus"
+                                class="text-[10px] {% if user.fingerprint_id %}text-emerald-500{% else %}text-amber-500{% endif %} font-black uppercase tracking-widest mt-0.5 truncate">
+                                {% if user.fingerprint_id %}Enrolled{% else %}Not Enrolled{% endif %}
+                            </p>
+                        </div>
+                        <button onclick="manageBio('finger')"
+                            class="shrink-0 text-[10px] font-black bg-white/5 text-white/70 border border-white/10 px-6 py-3 rounded-xl hover:bg-white/10 hover:text-white transition-all uppercase tracking-widest shadow-xl">Setup</button>
+                    </div>
+                </div>
+
+                <p class="mt-10 text-xs text-zinc-600 font-medium leading-relaxed italic border-t border-white/5 pt-8">
+                    Encryption keys are rotated every 24 hours to ensure biometric tunnel integrity.
+                </p>
+            </div>
+
+            <!-- Usage Metrics -->
+            <div class="glass-card rounded-[3rem] p-10 border border-white/5 shadow-2xl">
+                <div class="flex justify-between items-center mb-10">
+                    <h3 class="text-[10px] font-black text-white uppercase tracking-[0.3em]">Network Impact</h3>
+                    <span class="material-symbols-outlined text-zinc-700">query_stats</span>
+                </div>
+
+                <div class="space-y-8">
+                    <div class="flex justify-between items-end">
+                        <div>
+                            <p class="text-5xl font-black text-white tracking-tighter">{{ impact.total }}</p>
+                            <p class="text-[10px] text-zinc-500 font-black uppercase tracking-[0.2em] mt-2">Active
+                                Volume</p>
+                        </div>
+                        <div class="text-right">
+                            <span
+                                class="text-xs text-{{ impact.color }} font-black bg-{{ impact.color }}/10 px-3 py-1 rounded-xl border border-{{ impact.color }}/20 uppercase tracking-widest">{{
+                                impact.status }}</span>
+                        </div>
+                    </div>
+
+                    <div class="w-full h-4 bg-white/[0.03] rounded-full overflow-hidden flex border border-white/5 p-1">
+                        <div class="h-full bg-primary rounded-full shadow-[0_0_15px_rgba(75,142,255,0.5)] transition-all duration-1000"
+                            style="width: {{ impact.percent }}%"></div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-6">
+                        <div
+                            class="p-6 bg-white/[0.03] rounded-[2rem] border border-white/5 hover:border-white/10 transition-all">
+                            <p class="text-[10px] text-zinc-600 font-black uppercase tracking-widest mb-2">In Hub</p>
+                            <p class="text-3xl font-black text-white tracking-tighter">{{ impact.in_hub }}</p>
+                        </div>
+                        <div
+                            class="p-6 bg-white/[0.03] rounded-[2rem] border border-white/5 hover:border-white/10 transition-all">
+                            <p class="text-[10px] text-zinc-600 font-black uppercase tracking-widest mb-2">Verified</p>
+                            <p class="text-3xl font-black text-white tracking-tighter">{{ impact.verified }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- â”€â”€ Biometric Verification Modal â”€â”€ -->
+<div id="faceModal" class="hidden modal-overlay z-[100] p-4">
+    <div
+        class="modal-card flex flex-col bg-[#0d0d0e] border border-white/10 rounded-[3rem] overflow-hidden shadow-[0_0_100px_rgba(0,0,0,0.8)] max-w-5xl w-full relative">
+
+        <!-- Header -->
+        <div class="p-8 border-b border-white/5 flex justify-between items-center bg-white/[0.02]">
+            <div class="flex items-center gap-4">
+                <div
+                    class="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center border border-primary/20">
+                    <span class="material-symbols-outlined text-primary">security</span>
+                </div>
+                <div>
+                    <h3 class="text-sm font-black text-white uppercase tracking-widest">Biometric Security Terminal</h3>
+                    <p class="text-[10px] text-zinc-500 font-bold uppercase tracking-widest mt-1">Dual-Factor Identity
+                        Verification Layer</p>
+                </div>
+            </div>
+            <button onclick="closeFaceModal()"
+                class="w-10 h-10 flex items-center justify-center text-zinc-500 hover:text-white bg-white/5 hover:bg-white/10 rounded-xl transition-all">
+                <span class="material-symbols-outlined text-xl">close</span>
+            </button>
+        </div>
+
+        <div class="flex flex-col md:flex-row">
+            <!-- LEFT: Face Scanner -->
+            <div
+                class="flex-1 p-10 border-b md:border-b-0 md:border-r border-white/5 relative flex flex-col items-center">
+                <div id="faceStepBox"
+                    class="relative w-64 h-64 rounded-full border-2 border-white/5 flex items-center justify-center overflow-hidden transition-all duration-700">
+                    <div
+                        class="scanner-line absolute w-full h-1 bg-primary/40 shadow-[0_0_15px_rgba(75,142,255,0.8)] z-20">
+                    </div>
+                    <video id="faceVideo" autoplay playsinline muted
+                        class="absolute inset-0 w-full h-full object-cover scale-x-[-1]"></video>
+                    <img id="facePreview" class="absolute inset-0 w-full h-full object-cover hidden z-10"
+                        alt="Captured face">
+                    <canvas id="faceCanvas" class="hidden"></canvas>
+
+                    <!-- Crosshairs -->
+                    <div class="absolute inset-10 pointer-events-none z-30 opacity-40">
+                        <svg width="100%" height="100%" viewBox="0 0 100 100" class="text-primary">
+                            <path d="M 10 30 L 10 10 L 30 10" fill="none" stroke="currentColor" stroke-width="2" />
+                            <path d="M 90 30 L 90 10 L 70 10" fill="none" stroke="currentColor" stroke-width="2" />
+                            <path d="M 10 70 L 10 90 L 30 90" fill="none" stroke="currentColor" stroke-width="2" />
+                            <path d="M 90 70 L 90 90 L 70 90" fill="none" stroke="currentColor" stroke-width="2" />
+                        </svg>
+                    </div>
+                </div>
+
+                <div class="w-full mt-10 space-y-6 text-center">
+                    <div class="space-y-2">
+                        <div class="flex justify-between items-center px-1">
+                            <span id="faceStepStatus"
+                                class="text-[10px] font-black text-primary uppercase tracking-widest">Initializing...</span>
+                            <span class="material-symbols-outlined text-primary text-lg"
+                                id="faceStepIcon">videocam</span>
+                        </div>
+                        <div class="h-1.5 bg-white/5 rounded-full overflow-hidden border border-white/5">
+                            <div id="faceStepProgress"
+                                class="h-full bg-primary w-0 transition-all duration-700 shadow-[0_0_10px_rgba(75,142,255,0.5)]">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex gap-3">
+                        <button onclick="startWebcam()"
+                            class="flex-1 py-4 bg-white/5 border border-white/10 rounded-2xl text-[10px] font-black uppercase tracking-widest text-zinc-400 hover:text-white transition-all">Retry</button>
+                        <button id="btnCaptureFace" onclick="captureFace()"
+                            class="flex-[1.5] py-4 bg-primary text-white rounded-2xl text-[10px] font-black uppercase tracking-widest shadow-xl shadow-primary/20 hover:brightness-110 active:scale-95 transition-all">Start
+                            Verification</button>
+                    </div>
+                    <p id="faceStatus" class="text-[9px] text-zinc-600 font-bold uppercase tracking-widest mt-2 hidden">
+                    </p>
+                </div>
+            </div>
+
+            <!-- RIGHT: Fingerprint Scanner -->
+            <div class="flex-1 p-10 bg-black/20 backdrop-blur-3xl flex flex-col items-center justify-between">
+                <div id="fingerStepBox"
+                    class="w-64 h-64 rounded-[3rem] bg-white/[0.02] border-2 border-white/5 flex items-center justify-center relative overflow-hidden transition-all duration-700">
+                    <span id="fingerStepIcon"
+                        class="material-symbols-outlined text-[8rem] text-zinc-800 transition-all duration-700">fingerprint</span>
+                    <div class="absolute bottom-0 left-0 w-full h-1 bg-white/5"></div>
+                </div>
+
+                <div class="w-full space-y-5 text-center">
+                    <div class="space-y-2">
+                        <div class="flex justify-between items-center px-1">
+                            <span id="fingerStepStatus"
+                                class="text-[10px] font-black text-secondary uppercase tracking-widest">Awaiting
+                                Input</span>
+                            <span class="material-symbols-outlined text-secondary text-lg">touch_app</span>
+                        </div>
+                        <div class="h-1.5 bg-white/5 rounded-full overflow-hidden border border-white/5">
+                            <div id="fingerStepProgress"
+                                class="h-full bg-secondary w-0 transition-all duration-700 shadow-[0_0_10px_rgba(78,222,163,0.5)]">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Fingerprint PIN input -->
+                    <div class="space-y-3">
+                        <p class="text-[10px] text-zinc-500 font-bold uppercase tracking-widest">Enter Your Fingerprint
+                            PIN</p>
+                        <input id="fingerprintPinInput" type="password" placeholder="Enter registered PIN phrase"
+                            class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-zinc-600 focus:outline-none focus:border-secondary/50 focus:bg-white/[0.08] transition-all"
+                            autocomplete="off" />
+                        <button id="btn-verify-fingerprint" onclick="verifyFingerprintPin()"
+                            class="w-full py-4 bg-white/5 border border-white/10 rounded-2xl text-[10px] font-black uppercase tracking-widest text-zinc-400 hover:text-white hover:bg-secondary/20 hover:border-secondary/50 transition-all">Verify
+                            Fingerprint</button>
+                        <p id="fingerPinError"
+                            class="text-[9px] text-red-400 font-bold uppercase tracking-widest hidden"></p>
+                    </div>
+
+                    <p class="text-[9px] text-zinc-600 font-mono tracking-widest uppercase">Registered fingerprint ID
+                        required</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer Action -->
+        <div class="p-10 bg-white/[0.01] border-t border-white/5">
+            <button id="btnAuthorizeFinal" onclick="BiometricTerminal.finalize()" disabled
+                class="w-full py-6 bg-emerald-600 text-white rounded-[2rem] font-black text-xs uppercase tracking-[0.3em] shadow-2xl opacity-50 cursor-not-allowed transition-all">
+                Finalize Authorization
+            </button>
+            <input id="faceUsername" type="hidden" value="{{ user.username }}">
+        </div>
+    </div>
+</div>
+
+{% endblock %}

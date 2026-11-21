@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Kiosk Terminal · Smart Mailroom</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;family=JetBrains+Mono:wght@400;700&amp;display=swap" rel="stylesheet"/>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary": "#adc6ff",
+                        "secondary": "#4edea3",
+                        "error": "#ffb4ab",
+                        "background": "#131314",
+                        "surface": "#131314",
+                        "on-surface": "#e5e2e3",
+                    },
+                    "fontFamily": {
+                        "mono": ["JetBrains Mono", "monospace"]
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .bg-grid {
+            background-image: linear-gradient(to right, rgba(255,255,255,0.05) 1px, transparent 1px),
+                              linear-gradient(to bottom, rgba(255,255,255,0.05) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+        .scanning-ring {
+            border: 4px solid rgba(0, 122, 255, 0.3);
+            border-top: 4px solid #007AFF;
+            border-radius: 50%;
+            animation: spin 3s linear infinite;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .pulse-glow {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        @keyframes pulse { 0%, 100% { opacity: 1; filter: drop-shadow(0 0 10px #007AFF); } 50% { opacity: .6; filter: drop-shadow(0 0 2px #007AFF); } }
+        
+        .ui-state { display: none; }
+        .ui-state.active { display: flex; flex-direction: column; align-items: center; }
+        #hidden-camera { position: absolute; width:1px; height:1px; opacity:0; pointer-events:none; }
+    </style>
+</head>
+<body class="bg-[#0A0A0B] text-on-surface overflow-hidden h-screen font-['Inter'] selection:bg-primary/30">
+
+    <!-- Cinematic Background -->
+    <div class="fixed inset-0 z-0 pointer-events-none">
+        <div class="absolute inset-0 bg-grid opacity-30"></div>
+        <div class="absolute inset-0 bg-gradient-to-b from-[#0A0A0B]/0 via-[#0A0A0B]/50 to-[#0A0A0B]"></div>
+        <div class="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[120px]"></div>
+        <div class="absolute bottom-1/4 right-1/4 w-[600px] h-[600px] bg-secondary/5 rounded-full blur-[120px]"></div>
+    </div>
+
+    <!-- Layout Container -->
+    <div class="relative z-10 h-full flex flex-col items-center justify-between p-12">
+        
+        <!-- Top Status Bar -->
+        <header class="w-full flex items-center justify-between border-b border-white/5 pb-8">
+            <div class="flex items-center gap-6">
+                <div class="flex flex-col">
+                    <span class="text-white font-black tracking-tighter text-2xl uppercase">Smart Mailroom</span>
+                    <span class="text-zinc-500 font-mono text-xs tracking-widest uppercase">Kiosk Terminal ID: 7710-X</span>
+                </div>
+                <div class="h-10 w-[1px] bg-white/10 mx-2"></div>
+                <div class="flex flex-col">
+                    <span class="text-zinc-400 font-mono text-xs uppercase tracking-widest mb-1">Encrypted Connection</span>
+                    <div class="flex items-center gap-2">
+                        <div class="w-2 h-2 rounded-full bg-secondary pulse-glow" id="led-green"></div>
+                        <div class="w-2 h-2 rounded-full bg-error hidden" id="led-red"></div>
+                        <span class="text-secondary font-mono text-xs font-bold uppercase" id="status-text">SSL Verified</span>
+                    </div>
+                </div>
+            </div>
+            <div class="flex items-center gap-12">
+                <div class="flex flex-col items-end">
+                    <span class="text-white font-mono text-4xl font-light tracking-tight" id="clock">14:42:08</span>
+                    <span class="text-zinc-500 font-mono text-xs uppercase tracking-widest">Oct 24, 2023 | Seattle Hub</span>
+                </div>
+                <div class="flex items-center gap-4 bg-white/5 border border-white/10 p-3 px-5 rounded-xl backdrop-blur-xl">
+                    <div class="flex flex-col items-center">
+                        <span class="text-zinc-500 font-mono text-[10px] uppercase">Temp</span>
+                        <span class="text-white font-mono text-sm">21°C</span>
+                    </div>
+                    <div class="w-[1px] h-6 bg-white/10"></div>
+                    <div class="flex flex-col items-center">
+                        <span class="text-zinc-500 font-mono text-[10px] uppercase">Uptime</span>
+                        <span class="text-white font-mono text-sm">99.9%</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Workspace -->
+        <main class="flex-1 w-full flex items-center justify-center">
+            <div class="grid grid-cols-12 gap-12 w-full max-w-[1400px]">
+                
+                <!-- Left: Facility Metrics -->
+                <div class="col-span-3 flex flex-col gap-6">
+                    <div class="bg-white/5 border border-white/10 rounded-2xl p-6 backdrop-blur-xl">
+                        <h3 class="text-zinc-500 font-mono text-xs uppercase tracking-[0.2em] mb-4">Volume Trends</h3>
+                        <div class="space-y-4">
+                            <div class="flex justify-between items-end">
+                                <span class="text-zinc-400 text-sm">Processing</span>
+                                <span class="text-white font-mono">142 PKG</span>
+                            </div>
+                            <div class="w-full bg-white/5 h-1 rounded-full overflow-hidden">
+                                <div class="bg-primary h-full w-[65%]"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white/5 border border-white/10 rounded-2xl p-6 backdrop-blur-xl flex-1 flex flex-col justify-center gap-6">
+                        <div class="flex items-center gap-4">
+                            <span class="material-symbols-outlined text-zinc-500 text-3xl">security</span>
+                            <div>
+                                <p class="text-zinc-500 font-mono text-[10px] uppercase tracking-widest">Security Level</p>
+                                <p class="text-white font-bold">Protocol Alpha</p>
+                            </div>
+                        </div>
+                        <div class="w-full h-px bg-white/5"></div>
+                        <div class="flex items-center gap-4">
+                            <span class="material-symbols-outlined text-zinc-500 text-3xl">cloud_sync</span>
+                            <div>
+                                <p class="text-zinc-500 font-mono text-[10px] uppercase tracking-widest">Database Sync</p>
+                                <p class="text-white font-bold">Continuous</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Center: Biometric Scanning State -->
+                <div class="col-span-6 flex flex-col items-center justify-center relative">
+                    
+                    <!-- Corners decoration -->
+                    <div class="absolute inset-0 pointer-events-none">
+                        <div class="absolute top-0 left-0 w-8 h-8 border-t-2 border-l-2 border-primary/40"></div>
+                        <div class="absolute top-0 right-0 w-8 h-8 border-t-2 border-r-2 border-primary/40"></div>
+                        <div class="absolute bottom-0 left-0 w-8 h-8 border-b-2 border-l-2 border-primary/40"></div>
+                        <div class="absolute bottom-0 right-0 w-8 h-8 border-b-2 border-r-2 border-primary/40"></div>
+                    </div>
+
+                    <!-- STATE: IDLE -->
+                    <div id="state-idle" class="ui-state active">
+                        <div class="relative w-[440px] h-[440px] flex items-center justify-center">
+                            <div class="absolute inset-0 scanning-ring opacity-20"></div>
+                            <div class="relative z-20 flex flex-col items-center">
+                                <div class="w-64 h-64 rounded-3xl bg-white/5 border border-white/10 overflow-hidden flex items-center justify-center group transition-all duration-500 hover:border-primary/30">
+                                    <span class="material-symbols-outlined text-7xl text-primary/30 group-hover:scale-110 group-hover:text-primary transition-all duration-700">face</span>
+                                </div>
+                                <div class="mt-8 text-center">
+                                    <h2 class="text-white font-black uppercase tracking-tight text-3xl mb-2">Awaiting Scan</h2>
+                                    <p class="text-zinc-500 font-mono text-sm tracking-widest">READY FOR AUTHENTICATION</p>
+                                </div>
+                            </div>
+                        </div>
+                        <button onclick="startVerificationFlow()" class="mt-10 px-8 py-3 bg-white/5 border border-white/10 text-white font-mono text-[10px] uppercase tracking-[0.2em] hover:bg-white/10 transition-all rounded-xl">Start Verification (Dev)</button>
+                    </div>
+
+                    <!-- STATE: PROCESSING (Production Grade Terminal) -->
+                    <div id="state-processing" class="ui-state w-full">
+                        <div class="grid grid-cols-2 gap-12 w-full max-w-4xl mx-auto">
+                            <!-- Face Node -->
+                            <div id="faceStepBox" class="bg-white/5 border border-white/10 rounded-[3rem] p-10 flex flex-col items-center transition-all duration-700">
+                                <div class="relative w-48 h-48 rounded-full border-2 border-primary/20 flex items-center justify-center overflow-hidden mb-8">
+                                    <div class="scanner-line absolute w-full h-1 bg-primary/40 shadow-[0_0_15px_rgba(75,142,255,0.8)] z-20"></div>
+                                    <span id="faceStepIcon" class="material-symbols-outlined text-7xl text-primary/20">face</span>
+                                </div>
+                                <div class="w-full space-y-4">
+                                    <div class="flex justify-between items-center px-1">
+                                        <span id="faceStepStatus" class="text-[10px] font-black text-primary uppercase tracking-widest">Initializing...</span>
+                                        <span class="text-[10px] text-zinc-600 font-mono">NODE_01</span>
+                                    </div>
+                                    <div class="h-1.5 bg-white/5 rounded-full overflow-hidden border border-white/5">
+                                        <div id="faceStepProgress" class="h-full bg-primary w-0 transition-all duration-700 shadow-[0_0_10px_rgba(75,142,255,0.5)]"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Finger Node -->
+                            <div id="fingerStepBox" class="bg-white/5 border border-white/10 rounded-[3rem] p-10 flex flex-col items-center transition-all duration-700">
+                                <div class="relative w-48 h-48 rounded-[2.5rem] bg-white/[0.02] border-2 border-white/5 flex items-center justify-center overflow-hidden mb-8">
+                                    <span id="fingerStepIcon" class="material-symbols-outlined text-7xl text-secondary/20">fingerprint</span>
+                                </div>
+                                <div class="w-full space-y-4">
+                                    <div class="flex justify-between items-center px-1">
+                                        <span id="fingerStepStatus" class="text-[10px] font-black text-secondary uppercase tracking-widest">Awaiting Touch</span>
+                                        <span class="text-[10px] text-zinc-600 font-mono">NODE_02</span>
+                                    </div>
+                                    <div class="h-1.5 bg-white/5 rounded-full overflow-hidden border border-white/5">
+                                        <div id="fingerStepProgress" class="h-full bg-secondary w-0 transition-all duration-700 shadow-[0_0_10px_rgba(78,222,163,0.5)]"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-12 text-center">
+                            <h2 class="text-white font-black uppercase tracking-[0.3em] text-xl mb-2 animate-pulse">Dual-Factor Verification Active</h2>
+                            <p class="text-zinc-500 font-mono text-[10px] tracking-widest uppercase">System is cross-referencing encrypted biometric shards</p>
+                        </div>
+                    </div>
+
+                    <!-- STATE: SUCCESS -->
+                    <div id="state-success" class="ui-state">
+                        <div class="relative w-[440px] h-[440px] flex items-center justify-center">
+                            <div class="absolute inset-0 scanning-ring !border-secondary/40 !border-t-secondary"></div>
+                            <div class="relative z-20 flex flex-col items-center">
+                                <div class="w-64 h-64 rounded-3xl bg-secondary/10 border border-secondary/50 overflow-hidden flex items-center justify-center shadow-[0_0_80px_rgba(78,222,163,0.2)]">
+                                    <span class="material-symbols-outlined text-8xl text-secondary">check_circle</span>
+                                </div>
+                                <div class="mt-8 text-center">
+                                    <h2 class="text-secondary font-black uppercase tracking-tight text-3xl mb-2">Verified</h2>
+                                    <p class="text-zinc-500 font-mono text-sm tracking-widest">ACCESS GRANTED</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-8 bg-white/5 border border-secondary/20 rounded-2xl p-6 backdrop-blur-xl text-center min-w-[320px]">
+                            <p class="text-[10px] font-mono text-zinc-500 uppercase tracking-widest mb-1">Releasing Parcel</p>
+                            <p class="text-2xl font-bold text-white tracking-tight mb-1" id="out-parcel-id">---</p>
+                            <p class="text-sm text-secondary font-medium" id="out-student-name">---</p>
+                        </div>
+                    </div>
+
+                    <!-- STATE: FAIL -->
+                    <div id="state-fail" class="ui-state">
+                        <div class="relative w-[440px] h-[440px] flex items-center justify-center">
+                            <div class="absolute inset-0 scanning-ring !border-error/40 !border-t-error"></div>
+                            <div class="relative z-20 flex flex-col items-center">
+                                <div class="w-64 h-64 rounded-3xl bg-error/10 border border-error/50 overflow-hidden flex items-center justify-center shadow-[0_0_80px_rgba(255,180,171,0.2)]">
+                                    <span class="material-symbols-outlined text-8xl text-error">cancel</span>
+                                </div>
+                                <div class="mt-8 text-center">
+                                    <h2 class="text-error font-black uppercase tracking-tight text-3xl mb-2">Denied</h2>
+                                    <p class="text-zinc-500 font-mono text-sm tracking-widest">VERIFICATION FAILED</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-8 bg-error/5 border border-error/20 rounded-2xl p-4 px-8 backdrop-blur-xl">
+                            <p class="text-error font-bold text-sm uppercase tracking-wider" id="out-fail-reason">Unknown Error</p>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Right: Quick Actions & ID Entry -->
+                <div class="col-span-3 flex flex-col gap-6">
+                    <div class="bg-primary/10 border border-primary/30 rounded-2xl p-8 backdrop-blur-2xl flex flex-col items-center text-center group cursor-pointer hover:bg-primary/20 transition-all">
+                        <span class="material-symbols-outlined text-primary text-5xl mb-4 pulse-glow">qr_code_scanner</span>
+                        <h4 class="text-white font-bold text-lg mb-1">Scan QR Code</h4>
+                        <p class="text-zinc-400 text-sm">Hold parcel label to the scanner below</p>
+                    </div>
+                    <div class="bg-white/5 border border-white/10 rounded-2xl p-8 backdrop-blur-xl flex flex-col">
+                        <h4 class="text-zinc-500 font-mono text-xs uppercase tracking-widest mb-6">Manual Entry</h4>
+                        <div class="space-y-4">
+                            <div class="relative">
+                                <input id="manual-parcel-id" class="w-full bg-black/40 border border-white/10 rounded-xl px-5 py-4 text-white font-mono text-sm focus:outline-none focus:border-primary transition-all placeholder:text-zinc-700" placeholder="ENTER PARCEL ID" type="text"/>
+                                <span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-zinc-700">keyboard</span>
+                            </div>
+                            <button class="w-full bg-zinc-800 text-white font-bold py-4 rounded-xl hover:bg-zinc-700 transition-all border border-white/5 uppercase text-[10px] font-black tracking-[0.2em]">Verify ID</button>
+                        </div>
+                    </div>
+                    <div class="mt-auto bg-error/10 border border-error/20 rounded-2xl p-4 flex items-center gap-4">
+                        <div class="w-10 h-10 rounded-full bg-error/20 flex items-center justify-center">
+                            <span class="material-symbols-outlined text-error text-xl">emergency_home</span>
+                        </div>
+                        <div class="flex flex-col">
+                            <span class="text-error font-bold text-xs uppercase leading-none mb-1">Emergency Override</span>
+                            <span class="text-zinc-600 text-[9px] uppercase tracking-tighter">Authorized Personnel Only</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Bottom Hardware Status Bar -->
+        <footer class="w-full">
+            <div class="flex items-center justify-between gap-8 mb-4">
+                <div class="flex items-center gap-3">
+                    <span class="material-symbols-outlined text-zinc-600 text-lg">sensors</span>
+                    <span class="text-zinc-600 font-mono text-[10px] uppercase tracking-widest">Hardware Sensors Active</span>
+                </div>
+                <div class="flex-1 h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
+                <div class="flex items-center gap-6">
+                    <div class="flex items-center gap-2">
+                        <span class="text-zinc-600 font-mono text-[10px] uppercase">Scanner</span>
+                        <div class="w-12 h-1.5 bg-zinc-900 rounded-full overflow-hidden">
+                            <div class="bg-secondary h-full w-full"></div>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="text-zinc-600 font-mono text-[10px] uppercase">Thermal</span>
+                        <div class="w-12 h-1.5 bg-zinc-900 rounded-full overflow-hidden">
+                            <div class="bg-primary h-full w-[40%]"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="flex items-center justify-between text-zinc-700 font-mono text-[10px] tracking-[0.3em] uppercase">
+                <span>System Build: v4.22.09-Core</span>
+                <span class="text-zinc-500">SECURE ENTERPRISE HUB - AUTHORIZED TERMINAL USE ONLY</span>
+                <span>Kernel Latency: 2ms</span>
+            </div>
+        </footer>
+
+        <!-- Glowing Accent Lines -->
+        <div class="fixed top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-primary/30 to-transparent"></div>
+        <div class="fixed bottom-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-primary/30 to-transparent"></div>
+    </div>
+
+    <!-- Hidden Camera for functional logic -->
+    <div id="hidden-camera">
+        <video id="faceVideo" autoplay playsinline muted></video>
+        <canvas id="faceCanvas"></canvas>
+    </div>
+
+    <script>
+        // Set clock
+        setInterval(() => {
+            const d = new Date();
+            document.getElementById('clock').textContent = d.toTimeString().split(' ')[0];
+        }, 1000);
+
+        function setState(id) {
+            document.querySelectorAll('.ui-state').forEach(el => el.classList.remove('active'));
+            const stateEl = document.getElementById('state-' + id);
+            if (stateEl) stateEl.classList.add('active');
+            
+            // Update status text and LEDs based on state
+            const statusText = document.getElementById('status-text');
+            const ledGreen = document.getElementById('led-green');
+            const ledRed = document.getElementById('led-red');
+            
+            if (id === 'idle') {
+                statusText.textContent = 'SSL Verified';
+                statusText.className = 'text-secondary font-mono text-xs font-bold uppercase';
+                ledGreen.className = 'w-2 h-2 rounded-full bg-secondary pulse-glow';
+                ledRed.classList.add('hidden');
+                ledGreen.classList.remove('hidden');
+            } else if (id === 'processing') {
+                statusText.textContent = 'Authenticating...';
+                statusText.className = 'text-primary font-mono text-xs font-bold uppercase animate-pulse';
+                ledGreen.classList.add('hidden');
+                ledRed.classList.add('hidden');
+            } else if (id === 'success') {
+                statusText.textContent = 'Identity Confirmed';
+                statusText.className = 'text-secondary font-mono text-xs font-bold uppercase';
+                ledGreen.className = 'w-2 h-2 rounded-full bg-secondary pulse-glow shadow-[0_0_10px_#4edea3]';
+                ledRed.classList.add('hidden');
+                ledGreen.classList.remove('hidden');
+            } else if (id === 'fail') {
+                statusText.textContent = 'Unauthorized Access';
+                statusText.className = 'text-error font-mono text-xs font-bold uppercase';
+                ledRed.className = 'w-2 h-2 rounded-full bg-error shadow-[0_0_10px_#ffb4ab]';
+                ledGreen.classList.add('hidden');
+                ledRed.classList.remove('hidden');
+            }
+        }
+
+        let _stream = null;
+
+        async function startBackgroundCamera() {
+            try {
+                _stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' } });
+                const v = document.getElementById('faceVideo');
+                v.srcObject = _stream;
+                await v.play();
+            } catch(e) { console.warn('Camera:', e); }
+        }
+
+        function stopBackgroundCamera() {
+            if (_stream) { _stream.getTracks().forEach(t => t.stop()); _stream = null; }
+        }
+
+        async function captureFaceBase64() {
+            return new Promise(resolve => {
+                const v = document.getElementById('faceVideo');
+                const c = document.getElementById('faceCanvas');
+                if (!_stream || !v.videoWidth) { resolve(null); return; }
+                c.width = v.videoWidth; c.height = v.videoHeight;
+                c.getContext('2d').drawImage(v, 0, 0);
+                c.toBlob(blob => {
+                    const r = new FileReader();
+                    r.onloadend = () => resolve(r.result);
+                    r.readAsDataURL(blob);
+                }, 'image/jpeg', 0.9);
+            });
+        }
+
+        async function startVerificationFlow() {
+            setState('processing');
+            
+            const faceStatus = document.getElementById('faceStepStatus');
+            const faceProgress = document.getElementById('faceStepProgress');
+            const faceIcon = document.getElementById('faceStepIcon');
+            const faceBox = document.getElementById('faceStepBox');
+
+            const fingerStatus = document.getElementById('fingerStepStatus');
+            const fingerProgress = document.getElementById('fingerStepProgress');
+            const fingerIcon = document.getElementById('fingerStepIcon');
+            const fingerBox = document.getElementById('fingerStepBox');
+
+            const username = prompt('Enter Student Username (Demo):', 'student1');
+            if (!username) { setState('idle'); return; }
+
+            // Step 1: Initialize
+            faceStatus.textContent = 'CAMERA READY';
+            faceProgress.style.width = '25%';
+            fingerStatus.textContent = 'READING PRINT';
+            fingerProgress.style.width = '25%';
+            await delay(1000);
+
+            // Step 2: Detect
+            faceStatus.textContent = 'FACE DETECTED';
+            faceProgress.style.width = '50%';
+            fingerStatus.textContent = 'PROCESSING...';
+            fingerProgress.style.width = '50%';
+            await startBackgroundCamera();
+            await delay(1500);
+            const base64 = await captureFaceBase64();
+            stopBackgroundCamera();
+
+            if (!base64) { showFail('CAMERA UNAVAILABLE'); return; }
+
+            // Step 3: Match
+            faceStatus.textContent = 'MATCHING IDENTITY';
+            faceProgress.style.width = '75%';
+            fingerStatus.textContent = 'VERIFYING...';
+            fingerProgress.style.width = '75%';
+            await delay(1500);
+
+            try {
+                const res = await fetch('/api/verify-biometric', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, fingerprint_id: 'demo123', face_image: base64 })
+                });
+                const data = await res.json();
+                
+                if (res.ok && data.success) {
+                    // Step 4: Success
+                    faceStatus.textContent = 'VERIFIED';
+                    faceStatus.classList.replace('text-primary', 'text-secondary');
+                    faceProgress.style.width = '100%';
+                    faceIcon.textContent = 'check_circle';
+                    faceIcon.classList.replace('text-primary/20', 'text-secondary');
+                    faceBox.classList.add('border-secondary/50', 'bg-secondary/5');
+
+                    fingerStatus.textContent = 'VERIFIED';
+                    fingerProgress.style.width = '100%';
+                    fingerIcon.textContent = 'check_circle';
+                    fingerIcon.classList.replace('text-secondary/20', 'text-secondary');
+                    fingerBox.classList.add('border-secondary/50', 'bg-secondary/5');
+
+                    await delay(1000);
+                    showSuccess(data.parcel);
+                } else {
+                    showFail((data.message || 'Verification Failed').toUpperCase());
+                }
+            } catch(e) {
+                showFail('NETWORK ERROR');
+            }
+        }
+
+        function showSuccess(parcel) {
+            setState('success');
+            document.getElementById('out-student-name').textContent  = parcel?.student_name ?? '---';
+            document.getElementById('out-parcel-id').textContent     = 'PARCEL ID: #' + (parcel?.id ?? '---');
+            setTimeout(resetToIdle, 6000);
+        }
+
+        function showFail(reason) {
+            setState('fail');
+            document.getElementById('out-fail-reason').textContent = reason;
+            setTimeout(resetToIdle, 4000);
+        }
+
+        function resetToIdle() {
+            setState('idle');
+        }
+
+        const delay = ms => new Promise(r => setTimeout(r, ms));
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Wake up sensors
+            startBackgroundCamera().then(() => stopBackgroundCamera());
+        });
+    </script>
+</body>
+</html>l>

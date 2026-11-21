@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Smart Mailroom | Student Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-surface": "#e5e2e3",
+                    "surface-container-high": "#2a2a2b",
+                    "on-secondary-fixed-variant": "#005236",
+                    "surface-variant": "#353436",
+                    "surface-tint": "#adc6ff",
+                    "inverse-on-surface": "#313031",
+                    "on-tertiary": "#68000a",
+                    "secondary-container": "#00a572",
+                    "surface-container": "#201f20",
+                    "on-primary": "#002e69",
+                    "surface-container-highest": "#353436",
+                    "on-error-container": "#ffdad6",
+                    "surface-container-low": "#1c1b1c",
+                    "outline-variant": "#414755",
+                    "tertiary-fixed-dim": "#ffb3ad",
+                    "on-secondary-fixed": "#002113",
+                    "outline": "#8b90a0",
+                    "surface": "#131314",
+                    "primary-container": "#4b8eff",
+                    "inverse-primary": "#005bc1",
+                    "tertiary": "#ffb3ad",
+                    "error-container": "#93000a",
+                    "error": "#ffb4ab",
+                    "surface-bright": "#3a393a",
+                    "tertiary-fixed": "#ffdad7",
+                    "on-secondary-container": "#00311f",
+                    "surface-dim": "#131314",
+                    "primary-fixed": "#d8e2ff",
+                    "on-primary-container": "#00285c",
+                    "on-surface-variant": "#c1c6d7",
+                    "inverse-surface": "#e5e2e3",
+                    "on-error": "#690005",
+                    "on-secondary": "#003824",
+                    "primary": "#adc6ff",
+                    "background": "#131314",
+                    "on-tertiary-container": "#5c0008",
+                    "on-primary-fixed": "#001a41",
+                    "on-tertiary-fixed-variant": "#930013",
+                    "secondary": "#4edea3",
+                    "on-primary-fixed-variant": "#004493",
+                    "secondary-fixed": "#6ffbbe",
+                    "surface-container-lowest": "#0e0e0f",
+                    "primary-fixed-dim": "#adc6ff",
+                    "on-background": "#e5e2e3",
+                    "tertiary-container": "#ff5451",
+                    "secondary-fixed-dim": "#4edea3",
+                    "on-tertiary-fixed": "#410004"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "gutter": "24px",
+                    "unit": "4px",
+                    "container-max": "1440px",
+                    "margin": "40px"
+            },
+            "fontFamily": {
+                    "display-xl": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "label-caps": ["Inter"],
+                    "headline-md": ["Inter"],
+                    "body-md": ["Inter"],
+                    "headline-lg": ["Inter"]
+            },
+            "fontSize": {
+                    "display-xl": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                    "label-caps": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "headline-md": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                    "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                    "headline-lg": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .glass-card {
+            background: rgba(22, 22, 24, 0.6);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .glow-border {
+            border: 1px solid rgba(0, 122, 255, 0.3);
+            box-shadow: 0 0 15px rgba(0, 122, 255, 0.1);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .fill-icon {
+            font-variation-settings: 'FILL' 1;
+        }
+    </style>
+</head>
+<body class="bg-[#0A0A0B] text-on-surface font-body-md overflow-x-hidden selection:bg-primary-container selection:text-on-primary-container">
+<!-- SideNavBar Shell -->
+<aside class="fixed left-0 top-0 h-full w-[280px] border-r border-white/10 bg-[#0A0A0B] flex flex-col py-8 px-4 z-50">
+<div class="mb-12 px-2">
+<h1 class="text-lg font-black tracking-tighter text-white uppercase">Smart Mailroom</h1>
+<p class="text-[10px] text-zinc-500 font-medium tracking-[0.2em] uppercase mt-1">Secure Enterprise Hub</p>
+</div>
+<nav class="flex-1 space-y-2">
+<!-- Active: My Parcels -->
+<a class="flex items-center gap-3 px-4 py-3 bg-[#007AFF]/10 text-[#007AFF] border-r-2 border-[#007AFF] font-['Inter'] tracking-tight text-sm font-medium transition-all duration-300" href="#">
+<span class="material-symbols-outlined fill-icon" data-icon="package_2">package_2</span>
+                My Parcels
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-zinc-500 hover:text-zinc-200 hover:bg-white/5 transition-all duration-300 font-['Inter'] tracking-tight text-sm font-medium" href="#">
+<span class="material-symbols-outlined" data-icon="history">history</span>
+                Collection History
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-zinc-500 hover:text-zinc-200 hover:bg-white/5 transition-all duration-300 font-['Inter'] tracking-tight text-sm font-medium" href="#">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+                Profile
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-zinc-500 hover:text-zinc-200 hover:bg-white/5 transition-all duration-300 font-['Inter'] tracking-tight text-sm font-medium" href="#">
+<span class="material-symbols-outlined" data-icon="security">security</span>
+                Security
+            </a>
+</nav>
+<div class="mt-auto space-y-2 pt-8 border-t border-white/5">
+<button class="w-full flex items-center gap-3 px-4 py-3 text-zinc-500 hover:text-zinc-200 hover:bg-white/5 transition-all duration-300 font-['Inter'] tracking-tight text-sm font-medium">
+<span class="material-symbols-outlined" data-icon="help_center">help_center</span>
+                Support
+            </button>
+<button class="w-full flex items-center gap-3 px-4 py-3 text-zinc-500 hover:text-red-400 hover:bg-red-500/5 transition-all duration-300 font-['Inter'] tracking-tight text-sm font-medium">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+                Sign Out
+            </button>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="ml-[280px] min-h-screen relative pb-20">
+<!-- TopNavBar Shell -->
+<header class="fixed top-0 right-0 w-[calc(100%-280px)] h-16 bg-[#0A0A0B]/80 backdrop-blur-md border-b border-white/10 flex items-center justify-between px-8 z-40">
+<div class="flex items-center gap-4 bg-white/5 border border-white/10 rounded-full px-4 py-1.5 w-96">
+<span class="material-symbols-outlined text-zinc-500 text-lg">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-sm text-zinc-200 w-full placeholder:text-zinc-600" placeholder="Search tracking ID or courier..." type="text"/>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-3">
+<button class="text-zinc-400 hover:text-white transition-colors relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-0 right-0 w-2 h-2 bg-[#007AFF] rounded-full border-2 border-[#0A0A0B]"></span>
+</button>
+<button class="text-zinc-400 hover:text-white transition-colors">
+<span class="material-symbols-outlined">dark_mode</span>
+</button>
+<button class="text-zinc-400 hover:text-white transition-colors">
+<span class="material-symbols-outlined">grid_view</span>
+</button>
+</div>
+<div class="h-8 w-px bg-white/10"></div>
+<div class="flex items-center gap-3 group cursor-pointer">
+<div class="text-right">
+<p class="text-xs font-bold text-white leading-none">Alex Rivera</p>
+<p class="text-[10px] text-zinc-500">Student ID: #88219</p>
+</div>
+<img alt="User Avatar" class="w-8 h-8 rounded-full border border-white/20 group-hover:border-[#007AFF] transition-colors" data-alt="portrait of a young adult male with short dark hair and a friendly expression, professional studio lighting, clean background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBUUZfSwXK-tVENl6nZXPk6TdJGi-YFxcnIw9N0wvtRWKzqOSF3-2sZG9YhF7Z5nmYqRV5IkYU8PWMnFR_tMIfPjFJafYKH_bWNL3mfynHze2WPukNvQYwsrQGP6aOS7_0qU_sr0EgnKD5c6NvGJuxoR1JAhRNhygpYpMvbK2iY9GJh_iepq5D1fYQy71XuCIpyE6T8tVaDa9BXiwUhH7Q346S0ytWzvJtkzu-dOGyT18l2MwyALeIwEDYUUFMygcMk2eLxMEG2OQ"/>
+</div>
+</div>
+</header>
+<div class="mt-16 px-gutter pt-gutter max-w-container-max mx-auto">
+<!-- Welcome Hero -->
+<section class="mb-12 relative overflow-hidden rounded-3xl bg-[#161618] p-10 border border-white/5">
+<div class="absolute top-0 right-0 -mt-20 -mr-20 w-96 h-96 bg-[#007AFF]/10 rounded-full blur-[100px]"></div>
+<div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-8">
+<div>
+<h2 class="font-display-xl text-display-xl text-white mb-2">Hello, Alex.</h2>
+<p class="font-body-lg text-body-lg text-zinc-400 max-w-md">You have <span class="text-[#007AFF] font-bold">2 parcels</span> awaiting collection at the Main Hub Kiosk.</p>
+<div class="mt-8 flex gap-4">
+<button class="bg-[#007AFF] text-white px-6 py-3 rounded-xl font-bold flex items-center gap-2 hover:brightness-110 active:scale-95 transition-all shadow-lg shadow-[#007AFF]/20">
+<span class="material-symbols-outlined">qr_code_2</span>
+                                Generate Kiosk QR
+                            </button>
+<button class="border border-white/10 bg-white/5 text-white px-6 py-3 rounded-xl font-bold hover:bg-white/10 transition-all">
+                                View Map
+                            </button>
+</div>
+</div>
+<div class="hidden lg:block w-72 h-48 rounded-2xl overflow-hidden glass-card p-1">
+<img alt="Mailroom Kiosk" class="w-full h-full object-cover rounded-xl opacity-80" data-alt="modern industrial mailroom with sleek digital kiosk and automated locker system, soft blue accent lighting, clean minimalist aesthetic" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC1h93Qc-zGCcJdwaqj5Xu0IShfWH0DdPHgysgVz23SeZ_RWvJwKUCjBYI2OEC7rbRrsGEWeB8YeRE_ZCV9_lJKcATFOCV_iIkIdtMV7ofKnBLAdgEB1dNx_PR-T8MjANRIuMKyDE7nJVMnbUq8CkoRBT5CZUrrX1Gmu7YwXXn_41LOZ5VJmLWD86d4YQdCGWyu0o0moHqiP65AXurwvav89_eE6O6SdN-r_cK8CJE5nKiI6VbpLrs9DPQb9zO0CCUnZeG2tIBjcQ"/>
+</div>
+</div>
+</section>
+<!-- Main Grid -->
+<div class="grid grid-cols-12 gap-gutter">
+<!-- Awaiting Collection -->
+<div class="col-span-12 lg:col-span-8 space-y-6">
+<div class="flex items-center justify-between">
+<h3 class="font-headline-md text-headline-md text-white flex items-center gap-3">
+<span class="material-symbols-outlined text-[#007AFF]">package_2</span>
+                            Awaiting Collection
+                        </h3>
+<span class="px-3 py-1 bg-[#007AFF]/10 text-[#007AFF] text-xs font-bold rounded-full">2 Active Items</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<!-- Parcel Card 1 -->
+<div class="glass-card rounded-2xl p-6 group hover:glow-border transition-all duration-500">
+<div class="flex justify-between items-start mb-6">
+<div class="bg-white rounded-lg p-2 flex items-center justify-center w-12 h-12">
+<img alt="Amazon Logo" class="w-8" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBp7GNSWVqr2WoM5jyGKPSNNm2lKkCdV6lTFIXUeorE7a-kMhkdTWfzueIsmJDjajKs6K5vgMIUlG6SDYXv-qoyiiSe3eMzkAFaOjnm-8FAZL1Y0_BqAI1wi3Aj2YiKmlGF053UCIai53pKlEVTjdGhNdvbP9GwCE1T4DpGyJ0nqQz7ljlAIpuCPbwlxMSD8FeshxT7dvYdwuwLHlye_ltR52SV0QjlMnV5fOa6z433Z-ENIOgDhv9wHqxhYW4jqlwu1JJiA-OIxA"/>
+</div>
+<span class="text-[10px] font-bold tracking-widest text-zinc-500 uppercase px-2 py-1 border border-zinc-700 rounded">Standard Ship</span>
+</div>
+<div class="space-y-4">
+<div>
+<p class="text-xs text-zinc-500 font-medium">Tracking ID</p>
+<p class="text-lg font-mono text-zinc-200">#AMZ-8812-4491</p>
+</div>
+<div class="flex items-center gap-4 py-4 border-y border-white/5">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[#007AFF] text-sm">schedule</span>
+<p class="text-xs text-zinc-400">Arrived 2h ago</p>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[#007AFF] text-sm">inventory_2</span>
+<p class="text-xs text-zinc-400">Locker B-12</p>
+</div>
+</div>
+<button class="w-full bg-[#007AFF] text-white py-3 rounded-xl font-bold text-sm tracking-tight active:scale-[0.98] transition-transform hover:shadow-[0_0_20px_rgba(0,122,255,0.3)]">
+                                    Verify &amp; Collect
+                                </button>
+</div>
+</div>
+<!-- Parcel Card 2 -->
+<div class="glass-card rounded-2xl p-6 group hover:glow-border transition-all duration-500">
+<div class="flex justify-between items-start mb-6">
+<div class="bg-white rounded-lg p-2 flex items-center justify-center w-12 h-12">
+<img alt="UPS Logo" class="w-6" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAUG0ukEZfCi4JMSxiVM2NYFy7yJM1Wk8seabPukMpf_yKqDp2OPdgJtodiXNbHs_1LY3KILAvh01pulAhO3_6r2J8gjI5ap-yPKJ3WHbYj7o4P2u-DI4z6AdS8b8-PBRBJfqs4Eic--SZ8_0P1hi7o3tN8u_gfobe7XeGYbw3-vyiquttgQz3TB-M6nGpZsaa0yYEj2NarSBTn2QX1xslK77BAH0slrnFK1T4H845KYIEwlGyt73V0lpKunh76AvIoqm6t3byuxg"/>
+</div>
+<span class="text-[10px] font-bold tracking-widest text-zinc-500 uppercase px-2 py-1 border border-zinc-700 rounded">Express</span>
+</div>
+<div class="space-y-4">
+<div>
+<p class="text-xs text-zinc-500 font-medium">Tracking ID</p>
+<p class="text-lg font-mono text-zinc-200">#UPS-2290-7731</p>
+</div>
+<div class="flex items-center gap-4 py-4 border-y border-white/5">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[#007AFF] text-sm">schedule</span>
+<p class="text-xs text-zinc-400">Arrived 4h ago</p>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[#007AFF] text-sm">inventory_2</span>
+<p class="text-xs text-zinc-400">Hub Desk</p>
+</div>
+</div>
+<button class="w-full bg-[#007AFF] text-white py-3 rounded-xl font-bold text-sm tracking-tight active:scale-[0.98] transition-transform hover:shadow-[0_0_20px_rgba(0,122,255,0.3)]">
+                                    Verify &amp; Collect
+                                </button>
+</div>
+</div>
+</div>
+<!-- Recent Activity -->
+<div class="pt-8">
+<h3 class="font-headline-md text-headline-md text-white mb-6">Collection History</h3>
+<div class="glass-card rounded-2xl overflow-hidden">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="border-b border-white/10">
+<th class="px-6 py-4 text-xs font-bold text-zinc-500 uppercase tracking-widest">Parcel Details</th>
+<th class="px-6 py-4 text-xs font-bold text-zinc-500 uppercase tracking-widest">Date Collected</th>
+<th class="px-6 py-4 text-xs font-bold text-zinc-500 uppercase tracking-widest text-right">Status</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-white/5">
+<tr class="hover:bg-white/5 transition-colors group">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-zinc-800 flex items-center justify-center">
+<span class="material-symbols-outlined text-zinc-400 text-sm">package_2</span>
+</div>
+<div>
+<p class="text-sm font-medium text-zinc-200">FedEx - Electronics</p>
+<p class="text-[10px] text-zinc-500">ID: #FDX-0012</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 text-sm text-zinc-400">Oct 24, 2:15 PM</td>
+<td class="px-6 py-4 text-right">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-secondary-container/10 text-secondary-container text-xs font-bold">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary-container"></span>
+                                                Collected
+                                            </span>
+</td>
+</tr>
+<tr class="hover:bg-white/5 transition-colors group">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-zinc-800 flex items-center justify-center">
+<span class="material-symbols-outlined text-zinc-400 text-sm">auto_stories</span>
+</div>
+<div>
+<p class="text-sm font-medium text-zinc-200">DHL - Textbook Box</p>
+<p class="text-[10px] text-zinc-500">ID: #DHL-9982</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 text-sm text-zinc-400">Oct 21, 10:45 AM</td>
+<td class="px-6 py-4 text-right">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-secondary-container/10 text-secondary-container text-xs font-bold">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary-container"></span>
+                                                Collected
+                                            </span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<!-- Right Sidebar Widgets -->
+<div class="col-span-12 lg:col-span-4 space-y-gutter">
+<!-- Verification Status Widget -->
+<div class="glass-card rounded-3xl p-6 border-l-4 border-l-[#007AFF]">
+<h3 class="text-sm font-bold text-white uppercase tracking-widest mb-6">Security &amp; Verification</h3>
+<div class="space-y-6">
+<!-- Face ID -->
+<div class="flex items-center justify-between p-4 bg-white/5 rounded-2xl border border-white/5">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-secondary-container/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary-container" data-icon="face">face</span>
+</div>
+<div>
+<p class="text-sm font-bold text-zinc-200">Face Enrollment</p>
+<p class="text-[10px] text-secondary-container uppercase tracking-tighter">Verified Status</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-secondary-container fill-icon">check_circle</span>
+</div>
+<!-- Fingerprint -->
+<div class="flex items-center justify-between p-4 bg-[#ff5451]/5 rounded-2xl border border-[#ff5451]/10">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-[#ff5451]/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-[#ff5451]" data-icon="fingerprint">fingerprint</span>
+</div>
+<div>
+<p class="text-sm font-bold text-zinc-200">Fingerprint ID</p>
+<p class="text-[10px] text-[#ff5451] uppercase tracking-tighter">Action Required</p>
+</div>
+</div>
+<button class="text-[10px] font-black bg-[#ff5451] text-white px-2 py-1 rounded">SETUP</button>
+</div>
+</div>
+<p class="mt-6 text-xs text-zinc-500 italic leading-relaxed">
+                            Biometric verification is required for high-value parcel collections.
+                        </p>
+</div>
+<!-- Usage Stats / Mini Analytics -->
+<div class="glass-card rounded-3xl p-6">
+<div class="flex justify-between items-center mb-6">
+<h3 class="text-sm font-bold text-white uppercase tracking-widest">Monthly Usage</h3>
+<span class="material-symbols-outlined text-zinc-600">more_horiz</span>
+</div>
+<div class="space-y-4">
+<div class="flex justify-between items-end">
+<p class="text-3xl font-black text-white">14 <span class="text-xs text-zinc-500 font-normal uppercase tracking-normal">Parcels</span></p>
+<span class="text-xs text-secondary-container font-bold">+12% vs Sep</span>
+</div>
+<div class="w-full h-2 bg-white/5 rounded-full overflow-hidden flex">
+<div class="h-full bg-[#007AFF] w-2/3"></div>
+<div class="h-full bg-zinc-700 w-1/3"></div>
+</div>
+<div class="grid grid-cols-2 gap-4 pt-2">
+<div class="p-3 bg-white/5 rounded-xl">
+<p class="text-[10px] text-zinc-500 uppercase mb-1">In Locker</p>
+<p class="text-lg font-bold text-zinc-200">2</p>
+</div>
+<div class="p-3 bg-white/5 rounded-xl">
+<p class="text-[10px] text-zinc-500 uppercase mb-1">Collected</p>
+<p class="text-lg font-bold text-zinc-200">12</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Campus Announcement -->
+<div class="relative rounded-3xl overflow-hidden h-40 group cursor-pointer">
+<img alt="Campus Announcement" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" data-alt="Modern university campus building with large glass windows at twilight, warm interior lights glowing, students walking in the distance" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBW6PXAmzKO-lvjFD8__NAG95obwAwt6f2azP-KulBdeGxSyoMeHuZpqGhvuufw_NrKL2dUnrfk_rxlPI-Z2LgRjr6H7Ik5YYfTKjFVDqmlhKX1pF8xVEqOnHWm6hotEcUV9lS-a3agYuvzibz9aGNfh6LKj_gD4G5-cA9MfnbXY754psFanTNr-f0ow-zoRx_x1RcmoFVaiWm4CdjzKXFYnrqqZ3I09dhnN5j9y7Z2O4rs8WT92LI8Hp9YL1zMV5Do2eW2AvJYbA"/>
+<div class="absolute inset-0 bg-gradient-to-t from-[#0A0A0B] to-transparent"></div>
+<div class="absolute bottom-4 left-4 right-4">
+<span class="bg-[#007AFF] text-white text-[8px] font-black px-1.5 py-0.5 rounded uppercase mb-1 inline-block">News</span>
+<p class="text-sm font-bold text-white leading-tight">Holiday Hub Hours: Open 24/7 during Finals Week</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- FAB Suppression: Not rendered on dashboard to prioritize clean UI -->
+</body></html>

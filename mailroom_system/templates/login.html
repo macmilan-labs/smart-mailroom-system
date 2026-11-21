@@ -1,0 +1,300 @@
+{% extends "base.html" %}
+{% block login_content %}
+
+<div class="flex flex-col items-center w-full relative z-10">
+    <!-- Brand Header -->
+    <div class="mb-12 text-center">
+        <div class="inline-flex items-center justify-center mb-4 p-3 rounded-2xl bg-primary-container/10 border border-primary-container/20">
+            <span class="material-symbols-outlined text-primary text-3xl" data-icon="package_2">package_2</span>
+        </div>
+        <h1 class="font-display-xl text-display-xl tracking-tighter text-white uppercase">
+            Smart Mailroom
+        </h1>
+        <p class="text-on-surface-variant font-body-md mt-2">
+            Secure Enterprise Logistics Hub
+        </p>
+    </div>
+
+    <!-- Login Card -->
+    <div class="glass-card w-full max-w-[440px] rounded-[2rem] p-10 flex flex-col items-center">
+        
+        <!-- Error Message -->
+        {% if error %}
+        <div class="w-full bg-red-500/10 border border-red-500/20 text-red-400 p-3 rounded-xl mb-6 text-sm font-medium flex items-center gap-2">
+            <span class="material-symbols-outlined text-red-400">error</span>
+            {{ error }}
+        </div>
+        {% endif %}
+
+        <!-- Login Tabs -->
+        <div class="flex w-full bg-surface-container-low rounded-xl p-1.5 mb-8 relative" id="roleSwitch">
+            <div class="absolute bg-white/5 border border-white/5 rounded-lg inset-y-1.5 transition-all duration-300 w-[calc(50%-6px)]" id="roleIndicator" style="left: 6px;"></div>
+            <button type="button" id="tabAdmin" onclick="fillLogin('admin','admin','admin')" class="relative z-10 flex-1 py-2.5 rounded-lg font-label-caps text-label-caps text-primary transition-all duration-300">
+                Admin Login
+            </button>
+            <button type="button" id="tabStudent" onclick="fillLogin('student1','password','student')" class="relative z-10 flex-1 py-2.5 rounded-lg font-label-caps text-label-caps text-zinc-500 hover:text-zinc-300 transition-all duration-300">
+                Student Login
+            </button>
+        </div>
+
+        <!-- Form -->
+        <form action="/login" method="POST" class="w-full space-y-6">
+            <div class="space-y-1.5">
+                <label class="text-zinc-400 font-label-caps text-xs px-1" for="username" id="userLabel">ADMIN ID OR EMAIL</label>
+                <div class="relative flex items-center glow-border border border-white/5 bg-white/5 rounded-xl transition-all duration-300 group">
+                    <span class="material-symbols-outlined absolute left-4 text-zinc-500 group-focus-within:text-primary" data-icon="person">person</span>
+                    <input class="w-full bg-transparent border-none py-4 pl-12 pr-4 text-white placeholder-zinc-600 focus:ring-0 font-body-md" 
+                           id="username" name="username" placeholder="Enter credentials" type="text" required />
+                </div>
+            </div>
+
+            <div class="space-y-1.5">
+                <div class="flex justify-between items-center px-1">
+                    <label class="text-zinc-400 font-label-caps text-xs" for="password">PASSWORD</label>
+                    <a class="text-primary/70 hover:text-primary font-label-caps text-[10px] transition-colors" href="#">FORGOT?</a>
+                </div>
+                <div class="relative flex items-center glow-border border border-white/5 bg-white/5 rounded-xl transition-all duration-300 group">
+                    <span class="material-symbols-outlined absolute left-4 text-zinc-500 group-focus-within:text-primary" data-icon="lock">lock</span>
+                    <input class="w-full bg-transparent border-none py-4 pl-12 pr-4 text-white placeholder-zinc-600 focus:ring-0 font-body-md" 
+                           id="password" name="password" placeholder="••••••••" type="password" required />
+                </div>
+            </div>
+
+            <!-- Primary Sign In Button -->
+            <button type="submit" class="w-full btn-gradient py-4 rounded-xl font-headline-md text-white tracking-wide active:scale-[0.98] transition-all duration-200 shadow-lg shadow-blue-500/20">
+                Sign In
+            </button>
+
+            <!-- Divider -->
+            <div class="relative flex items-center py-2">
+                <div class="flex-grow border-t border-white/5"></div>
+                <span class="flex-shrink mx-4 text-zinc-600 font-label-caps text-[10px]">SECURE BIOMETRIC</span>
+                <div class="flex-grow border-t border-white/5"></div>
+            </div>
+
+            <!-- Biometric Login Button -->
+            <button id="biometric-login-btn" type="button" class="w-full flex items-center justify-center gap-3 py-4 border border-white/10 rounded-xl bg-white/5 hover:bg-white/10 active:scale-[0.98] transition-all duration-300">
+                <span class="material-symbols-outlined text-primary fill-icon" data-icon="fingerprint">fingerprint</span>
+                <span class="font-label-caps text-label-caps text-on-surface">Secure Biometric Login</span>
+            </button>
+        </form>
+    </div>
+
+    <!-- External Link Footer -->
+    <footer class="mt-8 text-center">
+        <button id="seed-btn" type="button" class="text-[10px] text-zinc-700 hover:text-zinc-500 transition-colors uppercase tracking-widest">
+            Initialize Test Data
+        </button>
+    </footer>
+
+    <!-- Decorative Image Overlays (Hidden on smaller screens) -->
+    <div class="fixed top-20 right-20 opacity-20 hidden lg:block select-none pointer-events-none -z-10">
+        <div class="w-64 h-64 rounded-full overflow-hidden border border-white/10 rotate-12">
+            <img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC7LpgILe7q-h8SmooMT2Y6VKVB9Wje_EhGxOw4GpGEE_aVHBNuDoG5Ww-L16U9_14gVobZqsBBcvNlc0EWQ6AA5AseLTTyyn3V4kdosFWkR5-Z00MvYyaSCO4xw5HJ-jVFC3rpLaAA4fug-PbgltIZaR2vmqZS1nWW5qTk7R3XEzrYjFN7aIy9w9V0PNoOAalYPSTrNsLgYjrM5rRGB1gjfpdwMCTPqPPSKttQef9EsWJGJMYF3iWfhsYlTqn9ihK7dYPW9NOPFw"/>
+        </div>
+    </div>
+    <div class="fixed bottom-20 left-20 opacity-20 hidden lg:block select-none pointer-events-none -z-10">
+        <div class="w-48 h-48 rounded-[2rem] overflow-hidden border border-white/10 -rotate-6">
+            <img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCW7djdS92Myk1OA9nwz7F4TH5VgmxGCQxYqvFIioNThVSHrDqXlV6gZ7Lbw3mLNc4UZ3It0sACxskApLJkds29IPy2JYsCAJk3bLGi5Z3EWiFmRGls5QcLfEMItZyldUFW2pG3Q4CSlnLKcAZn_P3iOTiXV0DRUPpf26Ola12pEmPDWG4Oa-TSOoUPNrxBSVzrXAWEQHVy2uByoz4eacc2dR9dPE9jAIHHjQr88qFAu2zw7fpibZeee0HHCLkY4Lr2rme_bXNOog"/>
+        </div>
+    </div>
+
+    <!-- Biometric Login Modal -->
+    <div id="biometricModal" class="hidden fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-md p-4">
+        <div class="glass-card w-full max-w-lg rounded-[3rem] shadow-2xl border border-white/10 overflow-hidden relative">
+            
+            <!-- Header -->
+            <div class="p-8 border-b border-white/5 flex justify-between items-center bg-white/[0.02]">
+                <div class="flex items-center gap-4">
+                    <div class="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center border border-primary/20">
+                        <span class="material-symbols-outlined text-primary">security_update_good</span>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-black text-white uppercase tracking-widest">Secure Terminal Access</h3>
+                        <p class="text-[10px] text-zinc-500 font-bold uppercase tracking-widest mt-1">Biometric Authentication Node</p>
+                    </div>
+                </div>
+                <button id="bioCancel" class="w-10 h-10 flex items-center justify-center text-zinc-500 hover:text-white bg-white/5 hover:bg-white/10 rounded-xl transition-all">
+                    <span class="material-symbols-outlined text-xl">close</span>
+                </button>
+            </div>
+
+            <!-- Content -->
+            <div class="p-10 flex flex-col items-center">
+                <div id="fingerStepBox" class="w-48 h-48 rounded-[2.5rem] bg-white/[0.02] border-2 border-white/5 flex items-center justify-center relative overflow-hidden transition-all duration-700 mb-10">
+                    <span id="fingerStepIcon" class="material-symbols-outlined text-[6rem] text-zinc-800 transition-all duration-700">fingerprint</span>
+                    <div id="bioPulse" class="absolute inset-0 bg-primary/5 rounded-full"></div>
+                </div>
+
+                <div class="w-full space-y-8">
+                    <div class="space-y-3">
+                        <div class="flex justify-between items-center px-1">
+                            <span id="fingerStepStatus" class="text-[10px] font-black text-primary uppercase tracking-widest">Awaiting Touch</span>
+                            <span class="material-symbols-outlined text-primary text-lg">touch_app</span>
+                        </div>
+                        <div class="h-1.5 bg-white/5 rounded-full overflow-hidden border border-white/5">
+                            <div id="fingerStepProgress" class="h-full bg-primary w-0 transition-all duration-1000 shadow-[0_0_10px_rgba(75,142,255,0.5)]"></div>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col gap-3">
+                        <button id="biometric-trigger" class="w-full py-5 bg-primary text-white rounded-2xl text-xs font-black uppercase tracking-[0.2em] shadow-xl shadow-primary/20 hover:brightness-110 active:scale-95 transition-all">
+                            Initiate Hardware Scan
+                        </button>
+                        <button id="bioRetry" class="hidden w-full py-4 bg-white/5 border border-white/10 rounded-2xl text-[10px] font-black uppercase tracking-widest text-zinc-400 hover:text-white transition-all">
+                            Retry Verification
+                        </button>
+                    </div>
+
+                    <div class="pt-6 border-t border-white/5 text-center">
+                        <p id="bioStatus" class="text-[10px] text-zinc-500 font-bold uppercase tracking-widest">Scanning is encrypted via 256-bit AES tunnel</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script>
+    function fillLogin(user, pass, role) {
+        document.getElementById('username').value = user;
+        document.getElementById('password').value = pass;
+
+        // Update tab styling
+        const tabAdmin = document.getElementById('tabAdmin');
+        const tabStudent = document.getElementById('tabStudent');
+        const userLabel = document.getElementById('userLabel');
+        const indicator = document.getElementById('roleIndicator');
+        
+        if (role === 'admin') {
+            tabAdmin.classList.add('text-primary');
+            tabAdmin.classList.remove('text-zinc-500');
+            tabStudent.classList.add('text-zinc-500');
+            tabStudent.classList.remove('text-primary');
+            userLabel.textContent = 'ADMIN ID OR EMAIL';
+            indicator.style.left = '6px';
+        } else {
+            tabStudent.classList.add('text-primary');
+            tabStudent.classList.remove('text-zinc-500');
+            tabAdmin.classList.add('text-zinc-500');
+            tabAdmin.classList.remove('text-primary');
+            userLabel.textContent = 'STUDENT ID';
+            indicator.style.left = 'calc(50% + 6px)';
+        }
+    }
+
+    // Pre-fill admin on load
+    document.addEventListener('DOMContentLoaded', () => {
+        fillLogin('admin', 'admin', 'admin');
+        
+        // Biometric Login Logic
+        const bioBtn = document.getElementById('biometric-login-btn');
+        const bioModal = document.getElementById('biometricModal');
+        const bioStatus = document.getElementById('fingerStepStatus');
+        const bioProgress = document.getElementById('fingerStepProgress');
+        const bioIcon = document.getElementById('fingerStepIcon');
+        const bioBox = document.getElementById('fingerStepBox');
+        const bioCancel = document.getElementById('bioCancel');
+        const bioRetry = document.getElementById('bioRetry');
+        const bioTrigger = document.getElementById('biometric-trigger');
+
+        let currentRole = 'admin';
+
+        // Override fillLogin to track currentRole
+        const originalFillLogin = window.fillLogin;
+        window.fillLogin = function(user, pass, role) {
+            originalFillLogin(user, pass, role);
+            currentRole = role;
+        };
+
+        const runBioAuth = async () => {
+            // Reset UI
+            bioStatus.textContent = 'Awaiting Touch';
+            bioStatus.className = 'text-[10px] font-black text-primary uppercase tracking-widest';
+            bioProgress.style.width = '0%';
+            bioIcon.textContent = 'fingerprint';
+            bioIcon.className = 'material-symbols-outlined text-[6rem] text-zinc-800 transition-all duration-700';
+            bioBox.className = 'w-48 h-48 rounded-[2.5rem] bg-white/[0.02] border-2 border-white/5 flex items-center justify-center relative overflow-hidden transition-all duration-700 mb-10';
+            bioRetry.classList.add('hidden');
+            bioTrigger.disabled = true;
+
+            // Step 1: Reading
+            setTimeout(() => {
+                bioStatus.textContent = 'Reading Print';
+                bioProgress.style.width = '33%';
+            }, 500);
+
+            // Step 2: Verifying
+            setTimeout(() => {
+                bioStatus.textContent = 'Verifying...';
+                bioProgress.style.width = '66%';
+            }, 1200);
+
+            // Get fingerprint ID based on role
+            const fingerprintId = currentRole === 'admin' ? 'admin_fingerprint' : 'student_fingerprint';
+
+            try {
+                const response = await fetch('/login/biometric', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ fingerprint_id: fingerprintId })
+                });
+
+                const data = await response.json();
+
+                // Wait for animation
+                await new Promise(r => setTimeout(r, 2000));
+
+                if (data.success) {
+                    // Success UX
+                    bioStatus.textContent = 'Identity Confirmed';
+                    bioStatus.className = 'text-[10px] font-black text-emerald-500 uppercase tracking-widest';
+                    bioProgress.style.width = '100%';
+                    bioIcon.textContent = 'check_circle';
+                    bioIcon.className = 'material-symbols-outlined text-[6rem] text-emerald-500 transition-all duration-700';
+                    bioBox.className = 'w-48 h-48 rounded-[2.5rem] bg-emerald-500/5 border-2 border-emerald-500/50 flex items-center justify-center relative overflow-hidden transition-all duration-700 mb-10';
+                    
+                    // Redirect after 1s
+                    setTimeout(() => {
+                        window.location.href = data.redirect;
+                    }, 800);
+                } else {
+                    // Failure UX
+                    bioStatus.textContent = 'Verification Failed';
+                    bioStatus.className = 'text-[10px] font-black text-red-500 uppercase tracking-widest';
+                    bioIcon.textContent = 'error';
+                    bioIcon.className = 'material-symbols-outlined text-[6rem] text-red-500 transition-all duration-700';
+                    bioBox.className = 'w-48 h-48 rounded-[2.5rem] bg-red-500/5 border-2 border-red-500/50 flex items-center justify-center relative overflow-hidden transition-all duration-700 mb-10';
+                    bioRetry.classList.remove('hidden');
+                    bioTrigger.disabled = false;
+                }
+            } catch (error) {
+                bioStatus.textContent = 'Terminal Error';
+                bioRetry.classList.remove('hidden');
+                bioTrigger.disabled = false;
+            }
+        };
+
+        bioBtn.addEventListener('click', () => {
+            bioModal.classList.remove('hidden');
+        });
+
+        bioTrigger.addEventListener('click', runBioAuth);
+        bioRetry.addEventListener('click', runBioAuth);
+
+        bioCancel.addEventListener('click', () => {
+            bioModal.classList.add('hidden');
+        });
+
+        // Seed Button Logic
+        document.getElementById('seed-btn').addEventListener('click', async () => {
+            try {
+                const res = await fetch('/api/seed', { method: 'POST' });
+                const data = await res.json();
+                alert(data.msg);
+            } catch (e) {
+                alert('Seed failed');
+            }
+        });
+    });
+</script>
+{% endblock %}

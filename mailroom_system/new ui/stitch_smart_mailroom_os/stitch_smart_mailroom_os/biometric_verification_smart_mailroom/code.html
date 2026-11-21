@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Biometric Verification | Smart Mailroom</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-surface": "#e5e2e3",
+                        "surface-container-high": "#2a2a2b",
+                        "on-secondary-fixed-variant": "#005236",
+                        "surface-variant": "#353436",
+                        "surface-tint": "#adc6ff",
+                        "inverse-on-surface": "#313031",
+                        "on-tertiary": "#68000a",
+                        "secondary-container": "#00a572",
+                        "surface-container": "#201f20",
+                        "on-primary": "#002e69",
+                        "surface-container-highest": "#353436",
+                        "on-error-container": "#ffdad6",
+                        "surface-container-low": "#1c1b1c",
+                        "outline-variant": "#414755",
+                        "tertiary-fixed-dim": "#ffb3ad",
+                        "on-secondary-fixed": "#002113",
+                        "outline": "#8b90a0",
+                        "surface": "#131314",
+                        "primary-container": "#4b8eff",
+                        "inverse-primary": "#005bc1",
+                        "tertiary": "#ffb3ad",
+                        "error-container": "#93000a",
+                        "error": "#ffb4ab",
+                        "surface-bright": "#3a393a",
+                        "tertiary-fixed": "#ffdad7",
+                        "on-secondary-container": "#00311f",
+                        "surface-dim": "#131314",
+                        "primary-fixed": "#d8e2ff",
+                        "on-primary-container": "#00285c",
+                        "on-surface-variant": "#c1c6d7",
+                        "inverse-surface": "#e5e2e3",
+                        "on-error": "#690005",
+                        "on-secondary": "#003824",
+                        "primary": "#adc6ff",
+                        "background": "#131314",
+                        "on-tertiary-container": "#5c0008",
+                        "on-primary-fixed": "#001a41",
+                        "on-tertiary-fixed-variant": "#930013",
+                        "secondary": "#4edea3",
+                        "on-primary-fixed-variant": "#004493",
+                        "secondary-fixed": "#6ffbbe",
+                        "surface-container-lowest": "#0e0e0f",
+                        "primary-fixed-dim": "#adc6ff",
+                        "on-background": "#e5e2e3",
+                        "tertiary-container": "#ff5451",
+                        "secondary-fixed-dim": "#4edea3",
+                        "on-tertiary-fixed": "#410004"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "display-xl": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "label-caps": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "body-md": ["Inter"],
+                        "headline-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "display-xl": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "label-caps": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "headline-md": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                        "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "headline-lg": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "600"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .glass-panel {
+            background: rgba(22, 22, 24, 0.7);
+            backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .glow-border-primary {
+            box-shadow: 0 0 20px rgba(0, 122, 255, 0.2);
+        }
+        .scanner-ring {
+            border: 2px solid transparent;
+            border-top-color: #007AFF;
+            border-bottom-color: #007AFF;
+            animation: spin 3s linear infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        .pulse-primary {
+            animation: pulse-primary 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        @keyframes pulse-primary {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: .7; transform: scale(1.05); }
+        }
+    </style>
+</head>
+<body class="bg-[#0A0A0B] font-body-md text-on-surface min-h-screen">
+<!-- SideNavBar (Shared Component) -->
+<aside class="fixed left-0 top-0 h-full w-[280px] border-r border-white/10 bg-[#0A0A0B] flex flex-col py-8 px-4 h-full border-r border-white/5 backdrop-blur-2xl shadow-[20px_0_40px_rgba(0,0,0,0.4)] z-50">
+<div class="mb-12 px-4">
+<h1 class="text-lg font-black tracking-tighter text-white uppercase font-['Inter']">Smart Mailroom</h1>
+<p class="text-xs text-zinc-500 font-medium tracking-tight">Secure Enterprise Hub</p>
+</div>
+<nav class="flex-1 space-y-2">
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-zinc-500 hover:text-zinc-200 hover:bg-white/5 transition-all duration-300 active:scale-[0.98] font-['Inter'] tracking-tight text-sm font-medium" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span>Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-zinc-500 hover:text-zinc-200 hover:bg-white/5 transition-all duration-300 active:scale-[0.98] font-['Inter'] tracking-tight text-sm font-medium" href="#">
+<span class="material-symbols-outlined" data-icon="package_2">package_2</span>
+<span>Parcels</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-zinc-500 hover:text-zinc-200 hover:bg-white/5 transition-all duration-300 active:scale-[0.98] font-['Inter'] tracking-tight text-sm font-medium" href="#">
+<span class="material-symbols-outlined" data-icon="insights">insights</span>
+<span>Analytics</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg bg-[#007AFF]/10 text-[#007AFF] border-r-2 border-[#007AFF] transition-all duration-300 active:scale-[0.98] font-['Inter'] tracking-tight text-sm font-medium" href="#">
+<span class="material-symbols-outlined" data-icon="fingerprint" style="font-variation-settings: 'FILL' 1;">fingerprint</span>
+<span>Verification</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-zinc-500 hover:text-zinc-200 hover:bg-white/5 transition-all duration-300 active:scale-[0.98] font-['Inter'] tracking-tight text-sm font-medium" href="#">
+<span class="material-symbols-outlined" data-icon="terminal">terminal</span>
+<span>Kiosk Terminal</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-zinc-500 hover:text-zinc-200 hover:bg-white/5 transition-all duration-300 active:scale-[0.98] font-['Inter'] tracking-tight text-sm font-medium" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span>Settings</span>
+</a>
+</nav>
+<div class="mt-auto pt-8 border-t border-white/5 space-y-2">
+<button class="w-full flex items-center gap-3 px-4 py-4 rounded-xl bg-[#007AFF] text-white font-bold text-sm mb-6 shadow-[0_0_20px_rgba(0,122,255,0.3)] hover:brightness-110 active:scale-95 transition-all">
+<span class="material-symbols-outlined" data-icon="qr_code_scanner">qr_code_scanner</span>
+<span>Scan New Parcel</span>
+</button>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-zinc-500 hover:text-zinc-200 hover:bg-white/5 transition-all duration-300 font-['Inter'] tracking-tight text-sm font-medium" href="#">
+<span class="material-symbols-outlined" data-icon="help_center">help_center</span>
+<span>Support</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-zinc-500 hover:text-zinc-200 hover:bg-white/5 transition-all duration-300 font-['Inter'] tracking-tight text-sm font-medium" href="#">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+<span>Sign Out</span>
+</a>
+</div>
+</aside>
+<!-- TopNavBar (Shared Component) -->
+<header class="fixed top-0 right-0 w-[calc(100%-280px)] h-16 bg-[#0A0A0B]/80 backdrop-blur-md flex items-center justify-between px-8 z-40 border-b border-white/10 font-['Inter'] text-sm">
+<div class="flex items-center gap-4 bg-white/5 px-4 py-2 rounded-full border border-white/10 w-96">
+<span class="material-symbols-outlined text-zinc-400" data-icon="search">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-sm text-zinc-200 w-full" placeholder="Search parcels, users, or logs..." type="text"/>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-4">
+<button class="text-zinc-400 hover:text-white transition-colors active:opacity-80">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="text-zinc-400 hover:text-white transition-colors active:opacity-80">
+<span class="material-symbols-outlined" data-icon="dark_mode">dark_mode</span>
+</button>
+<button class="text-zinc-400 hover:text-white transition-colors active:opacity-80">
+<span class="material-symbols-outlined" data-icon="grid_view">grid_view</span>
+</button>
+</div>
+<div class="h-8 w-[1px] bg-white/10"></div>
+<button class="bg-[#007AFF]/10 text-[#007AFF] px-4 py-1.5 rounded-lg font-bold border border-[#007AFF]/20 hover:bg-[#007AFF]/20 transition-all">
+                Quick Verify
+            </button>
+<div class="flex items-center gap-3">
+<div class="text-right">
+<p class="text-xs font-bold text-white leading-none">Admin Alpha</p>
+<p class="text-[10px] text-[#007AFF] font-medium">Authorized</p>
+</div>
+<img alt="Admin User Profile" class="w-10 h-10 rounded-full border-2 border-[#007AFF]/30" data-alt="professional male portrait with neutral background and sharp focus for corporate profile avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD82nkwJy7r0eqqlfW7El4AynxCI9ODLiDv1MJb_vIeMwomCSATT6HDYO_5BEW8F6Up6qOrftE38Qrkd7Cf7RyTaLTPyWz2PumkFTCB6JCH_3TwEGiPH1Mt8k4m1ut5ElfKqdsfdjwIo7n2ArnfcG-5orDV901HSnxSLbRBJputE7iV1KHwpQCOXkcAdTwGpbMYM9o_vmDaCZIMtrRnidC0NhhlG0-zTIYgXsDohpu1J6ENzWEMlUKyTPMKt6SuUnuDuFyRXys6hg"/>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="ml-[280px] pt-16 min-h-screen relative overflow-hidden">
+<!-- Dashboard Background Content (Simulated) -->
+<div class="p-gutter grid grid-cols-12 gap-gutter opacity-20 pointer-events-none filter blur-[2px]">
+<div class="col-span-8 space-y-6">
+<div class="h-48 rounded-2xl bg-surface-container-high border border-white/5"></div>
+<div class="grid grid-cols-3 gap-6">
+<div class="h-32 rounded-2xl bg-surface-container-high border border-white/5"></div>
+<div class="h-32 rounded-2xl bg-surface-container-high border border-white/5"></div>
+<div class="h-32 rounded-2xl bg-surface-container-high border border-white/5"></div>
+</div>
+<div class="h-96 rounded-2xl bg-surface-container-high border border-white/5"></div>
+</div>
+<div class="col-span-4 space-y-6">
+<div class="h-[600px] rounded-2xl bg-surface-container-high border border-white/5"></div>
+</div>
+</div>
+<!-- Biometric Verification Modal Overlay -->
+<div class="fixed inset-0 z-[60] flex items-center justify-center p-8 bg-black/40 backdrop-blur-sm">
+<div class="max-w-5xl w-full glass-panel rounded-[32px] overflow-hidden shadow-[0_40px_100px_rgba(0,0,0,0.6)] flex flex-col">
+<!-- Modal Header -->
+<div class="px-10 py-8 border-b border-white/5 flex items-center justify-between">
+<div>
+<h2 class="font-headline-lg text-white mb-1">Security Authentication</h2>
+<div class="flex items-center gap-3">
+<span class="w-2 h-2 rounded-full bg-[#007AFF] pulse-primary"></span>
+<span class="text-sm font-medium text-zinc-400">Verification in Progress...</span>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="flex flex-col items-end">
+<span class="text-[10px] text-zinc-500 uppercase tracking-widest font-bold">Terminal ID</span>
+<span class="text-xs font-mono text-zinc-300">MX-449-ALPHA</span>
+</div>
+<div class="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-zinc-400 hover:text-white cursor-pointer transition-colors">
+<span class="material-symbols-outlined" data-icon="close">close</span>
+</div>
+</div>
+</div>
+<!-- Dual-Pane Verification Area -->
+<div class="grid grid-cols-2 flex-1">
+<!-- Left Pane: Face ID Recognition -->
+<div class="p-12 border-r border-white/5 flex flex-col items-center justify-center relative group">
+<div class="absolute top-8 left-8 flex items-center gap-2">
+<span class="material-symbols-outlined text-[#007AFF] text-sm" data-icon="videocam">videocam</span>
+<span class="text-[10px] text-[#007AFF] font-bold uppercase tracking-widest">Live Feed</span>
+</div>
+<div class="relative w-64 h-64 mb-8">
+<!-- Circular Scanning Ring -->
+<div class="absolute inset-[-10px] rounded-full scanner-ring opacity-50"></div>
+<div class="absolute inset-[-20px] rounded-full border border-[#007AFF]/10"></div>
+<!-- Webcam Feed Simulation -->
+<div class="w-full h-full rounded-full overflow-hidden border-4 border-surface-container shadow-2xl relative">
+<img alt="Face ID Recognition Feed" class="w-full h-full object-cover grayscale brightness-110 contrast-125" data-alt="Close up of a human face with digital scanning grid overlay, teal highlights, high tech security interface style" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCek6vQfwKdXGKAUrdFCBXXBCHdbSFTFs7v5onh7EZwnlWPHpyMRY_qtQxB_bKpzbPlT9CapFjT2cImKfUiJwi-vhcDppK4sdi9AhOChsGNRjeTiy-Mih4XIOGt0G9qJxsBFeIV8npq-atemU9oZf-7OxxYP3srKcdh5dPCGVW7p_m9U8EY7j9MN5IEQc08Z1ISFnaFRG8VlqUydpCYjwIwUIzxhxyI3z-iRSM2iWZ38OcnnlouFiW2Aos6worahJgsST13E2OX3w"/>
+<!-- Digital Scanning Grid Overlay -->
+<div class="absolute inset-0 bg-[radial-gradient(circle,_transparent_30%,_rgba(0,122,255,0.1)_100%)]"></div>
+<div class="absolute top-1/2 left-0 w-full h-0.5 bg-[#007AFF] shadow-[0_0_15px_#007AFF] animate-[bounce_4s_infinite]"></div>
+</div>
+</div>
+<div class="text-center">
+<p class="text-zinc-500 text-xs font-bold uppercase tracking-widest mb-2">Face ID Recognition</p>
+<div class="flex items-center gap-2 justify-center">
+<span class="text-3xl font-black text-white">98.4%</span>
+<span class="text-[#007AFF] material-symbols-outlined" data-icon="verified" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+<p class="text-[10px] text-zinc-400 mt-1 font-medium italic">Identity Match Confirmed</p>
+</div>
+</div>
+<!-- Right Pane: Fingerprint Auth -->
+<div class="p-12 flex flex-col items-center justify-center relative bg-white/[0.02]">
+<div class="absolute top-8 left-8 flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary text-sm" data-icon="sensors">sensors</span>
+<span class="text-[10px] text-secondary font-bold uppercase tracking-widest">Active Sensor</span>
+</div>
+<div class="relative mb-10">
+<!-- Glowing Fingerprint Icon -->
+<div class="w-48 h-48 rounded-3xl bg-surface-container flex items-center justify-center border border-white/5 shadow-inner group cursor-pointer overflow-hidden">
+<div class="absolute inset-0 bg-gradient-to-tr from-secondary/5 to-transparent opacity-50"></div>
+<span class="material-symbols-outlined text-7xl text-secondary pulse-primary" data-icon="fingerprint">fingerprint</span>
+<!-- Success Overlay (Ready to appear) -->
+<div class="absolute inset-0 bg-secondary/20 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity backdrop-blur-[2px]">
+<span class="material-symbols-outlined text-6xl text-white font-bold" data-icon="check_circle">check_circle</span>
+</div>
+</div>
+<!-- Success State Glow -->
+<div class="absolute -inset-4 bg-secondary/10 blur-2xl rounded-full opacity-30"></div>
+</div>
+<div class="w-64 text-center">
+<p class="text-zinc-500 text-xs font-bold uppercase tracking-widest mb-4">Fingerprint Auth</p>
+<!-- Custom Progress Bar -->
+<div class="w-full h-1.5 bg-white/5 rounded-full mb-4 overflow-hidden border border-white/5">
+<div class="h-full bg-secondary shadow-[0_0_10px_#4edea3] w-[75%] transition-all duration-500"></div>
+</div>
+<p class="text-sm font-semibold text-white">Place finger on reader</p>
+<p class="text-[10px] text-zinc-500 mt-1 uppercase tracking-tighter">Biometric sampling at 256-bit entropy</p>
+</div>
+</div>
+</div>
+<!-- Footer / Feedback Bar -->
+<div class="px-10 py-6 bg-white/[0.03] border-t border-white/5 flex items-center justify-between">
+<div class="flex items-center gap-4">
+<!-- Sleek Spinner -->
+<div class="flex gap-1.5">
+<div class="w-1.5 h-1.5 rounded-full bg-[#007AFF] animate-bounce"></div>
+<div class="w-1.5 h-1.5 rounded-full bg-[#007AFF] animate-bounce [animation-delay:0.2s]"></div>
+<div class="w-1.5 h-1.5 rounded-full bg-[#007AFF] animate-bounce [animation-delay:0.4s]"></div>
+</div>
+<span class="text-xs font-medium text-zinc-400">Syncing with Central Security Database...</span>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-secondary"></span>
+<span class="text-[10px] font-bold text-zinc-300 uppercase tracking-widest">Encrypted Tunnel</span>
+</div>
+<button class="bg-white/5 hover:bg-white/10 text-white px-6 py-2 rounded-xl text-xs font-bold border border-white/10 transition-all active:scale-95">
+                            Cancel Session
+                        </button>
+</div>
+</div>
+</div>
+</div>
+<!-- Notification Toast (Success State Hint) -->
+<div class="fixed bottom-12 right-12 z-[70] hidden md:flex items-center gap-4 glass-panel p-6 rounded-2xl border-secondary/30 shadow-[0_20px_50px_rgba(0,0,0,0.3)] transform translate-y-20 opacity-0 transition-all duration-500 translate-y-0 opacity-100">
+<div class="w-12 h-12 rounded-full bg-secondary/20 flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-3xl" data-icon="verified_user">verified_user</span>
+</div>
+<div>
+<h4 class="text-white font-bold text-sm">Identity Verified</h4>
+<p class="text-xs text-zinc-400">Access granted to Secure Archive Room B-12</p>
+</div>
+<button class="ml-4 text-zinc-500 hover:text-white">
+<span class="material-symbols-outlined text-lg" data-icon="close">close</span>
+</button>
+</div>
+</main>
+</body></html>

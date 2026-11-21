@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SMART MAILROOM</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "on-surface": "#e5e2e3",
+                        "surface-container-high": "#2a2a2b",
+                        "on-secondary-fixed-variant": "#005236",
+                        "surface-variant": "#353436",
+                        "surface-tint": "#adc6ff",
+                        "inverse-on-surface": "#313031",
+                        "on-tertiary": "#68000a",
+                        "secondary-container": "#00a572",
+                        "surface-container": "#201f20",
+                        "on-primary": "#002e69",
+                        "surface-container-highest": "#353436",
+                        "on-error-container": "#ffdad6",
+                        "surface-container-low": "#1c1b1c",
+                        "outline-variant": "#414755",
+                        "tertiary-fixed-dim": "#ffb3ad",
+                        "on-secondary-fixed": "#002113",
+                        "outline": "#8b90a0",
+                        "surface": "#131314",
+                        "primary-container": "#4b8eff",
+                        "inverse-primary": "#005bc1",
+                        "tertiary": "#ffb3ad",
+                        "error-container": "#93000a",
+                        "error": "#ffb4ab",
+                        "surface-bright": "#3a393a",
+                        "tertiary-fixed": "#ffdad7",
+                        "on-secondary-container": "#00311f",
+                        "surface-dim": "#131314",
+                        "primary-fixed": "#d8e2ff",
+                        "on-primary-container": "#00285c",
+                        "on-surface-variant": "#c1c6d7",
+                        "inverse-surface": "#e5e2e3",
+                        "on-error": "#690005",
+                        "on-secondary": "#003824",
+                        "primary": "#adc6ff",
+                        "background": "#131314",
+                        "on-tertiary-container": "#5c0008",
+                        "on-primary-fixed": "#001a41",
+                        "on-tertiary-fixed-variant": "#930013",
+                        "secondary": "#4edea3",
+                        "on-primary-fixed-variant": "#004493",
+                        "secondary-fixed": "#6ffbbe",
+                        "surface-container-lowest": "#0e0e0f",
+                        "primary-fixed-dim": "#adc6ff",
+                        "on-background": "#e5e2e3",
+                        "tertiary-container": "#ff5451",
+                        "secondary-fixed-dim": "#4edea3",
+                        "on-tertiary-fixed": "#410004"
+                    },
+                    fontFamily: {
+                        "display-xl": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "label-caps": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "body-md": ["Inter"],
+                        "headline-lg": ["Inter"]
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Force-hide any legacy sidebar elements */
+        aside, .sidebar, #sidebar { display: none !important; }
+        .main-content { margin-left: 0 !important; width: 100% !important; }
+    </style>
+</head>
+<body class="bg-[#0A0A0B] text-on-surface font-body-md overflow-x-hidden selection:bg-primary-container selection:text-on-primary-container min-h-screen">
+
+    {% if user %}
+    <!-- ── PREMIUM TOP NAVIGATION ── -->
+    <header class="fixed top-0 left-0 w-full h-20 bg-[#0A0A0B]/80 backdrop-blur-xl border-b border-white/5 z-50 flex items-center justify-between px-10">
+        <!-- Brand -->
+        <div class="flex items-center gap-4 shrink-0">
+            <div class="p-2 bg-primary/10 rounded-xl border border-primary/20">
+                <span class="material-symbols-outlined text-primary text-2xl" data-icon="package_2">package_2</span>
+            </div>
+            <div class="hidden sm:block">
+                <h1 class="text-lg font-black tracking-tighter text-white uppercase font-['Inter'] leading-none">Smart Mailroom</h1>
+                <p class="text-[10px] text-zinc-500 font-medium tracking-[0.2em] uppercase mt-1">Secure Enterprise Hub</p>
+            </div>
+        </div>
+
+        <!-- Search (Center) -->
+        <div class="hidden md:flex items-center gap-4 bg-white/5 border border-white/10 rounded-2xl px-5 py-2.5 w-[450px] focus-within:border-primary/50 focus-within:bg-white/10 transition-all duration-300">
+            <span class="material-symbols-outlined text-zinc-500 text-xl" data-icon="search">search</span>
+            <input type="text" id="globalSearch" placeholder="Search tracking ID, student name..." class="bg-transparent border-none outline-none focus:ring-0 text-sm text-zinc-300 w-full placeholder:text-zinc-600">
+        </div>
+
+        <!-- Right Actions -->
+        <div class="flex items-center gap-3 sm:gap-6">
+            <div class="flex items-center gap-2 sm:gap-4 border-r border-white/10 pr-4 sm:pr-6">
+                <button class="w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center rounded-xl text-zinc-400 hover:text-white hover:bg-white/5 transition-all relative">
+                    <span class="material-symbols-outlined text-xl sm:text-2xl" data-icon="notifications">notifications</span>
+                    <span class="absolute top-2.5 right-2.5 w-1.5 h-1.5 sm:w-2 sm:h-2 bg-primary rounded-full border-2 border-[#0A0A0B]"></span>
+                </button>
+                <button id="themeToggle" class="w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center rounded-xl text-zinc-400 hover:text-white hover:bg-white/5 transition-all">
+                    <span class="material-symbols-outlined text-xl sm:text-2xl" id="themeIcon" data-icon="dark_mode">dark_mode</span>
+                </button>
+            </div>
+            
+            <!-- User Profile Dropdown -->
+            <div class="relative group">
+                <button class="flex items-center gap-4 group cursor-pointer focus:outline-none">
+                    <div class="text-right hidden sm:block">
+                        <p class="text-xs font-bold text-white leading-none">{{ user.username }}</p>
+                        <p class="text-[9px] text-primary font-black uppercase mt-1 tracking-widest">{{ user.role }}</p>
+                    </div>
+                    <div class="w-11 h-11 rounded-2xl border-2 border-primary/20 overflow-hidden flex items-center justify-center bg-surface-container-high font-bold text-white transition-all group-hover:border-primary group-hover:shadow-[0_0_20px_rgba(75,142,255,0.3)]">
+                        {{ user.username[0]|upper }}
+                    </div>
+                </button>
+                
+                <!-- Dropdown Content -->
+                <div class="absolute top-full right-0 mt-3 w-64 glass-card rounded-[2rem] shadow-[0_20px_50px_rgba(0,0,0,0.5)] opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-500 py-4 z-50 border border-white/10 translate-y-2 group-hover:translate-y-0">
+                    <div class="px-6 py-3 border-b border-white/5 mb-2">
+                        <p class="text-xs font-bold text-white">{{ user.username }}</p>
+                        <p class="text-[10px] text-zinc-500 uppercase tracking-widest">Account Hub</p>
+                    </div>
+                    
+                    <a href="#" class="flex items-center gap-4 px-6 py-3 text-sm text-zinc-400 hover:text-white hover:bg-white/5 transition-all">
+                        <span class="material-symbols-outlined text-xl">person</span> 
+                        <span>Profile Settings</span>
+                    </a>
+                    
+                    {% if user.role == 'admin' %}
+                    <a href="#" class="flex items-center gap-4 px-6 py-3 text-sm text-zinc-400 hover:text-white hover:bg-white/5 transition-all">
+                        <span class="material-symbols-outlined text-xl">settings</span> 
+                        <span>System Settings</span>
+                    </a>
+                    <a href="/display" target="_blank" class="flex items-center gap-4 px-6 py-3 text-sm text-zinc-400 hover:text-white hover:bg-white/5 transition-all">
+                        <span class="material-symbols-outlined text-xl">terminal</span> 
+                        <span>Kiosk Mode</span>
+                    </a>
+                    {% else %}
+                    <a href="#" class="flex items-center gap-4 px-6 py-3 text-sm text-zinc-400 hover:text-white hover:bg-white/5 transition-all">
+                        <span class="material-symbols-outlined text-xl">security</span> 
+                        <span>Security Status</span>
+                    </a>
+                    {% endif %}
+
+                    <div class="h-px bg-white/5 my-3 mx-6"></div>
+                    
+                    <a href="/logout" class="flex items-center gap-4 px-6 py-3 text-sm text-red-400 hover:text-red-300 hover:bg-red-500/5 transition-all font-bold">
+                        <span class="material-symbols-outlined text-xl">logout</span> 
+                        <span>Sign Out</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- ── MAIN CONTENT (TOP NAV LAYOUT) ── -->
+    <div class="min-h-screen relative pt-20">
+        <main class="pt-10 px-10 pb-20 animate-enter">
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+
+    {% else %}
+    <!-- ── CENTERED LAYOUT (NO SIDEBAR) ── -->
+    <!-- Futuristic Background Layer -->
+    <div class="fixed inset-0 z-0 bg-grid">
+        <div class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary-container/10 rounded-full blur-[120px]"></div>
+        <div class="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-secondary-container/5 rounded-full blur-[120px]"></div>
+    </div>
+    <main class="relative z-10 flex min-h-screen flex-col items-center justify-center p-6 animate-enter">
+        {% block login_content %}{% endblock %}
+    </main>
+    {% endif %}
+
+    <!-- ── DEV MODE PILL ── -->
+    <div class="fixed bottom-6 right-6 z-[9999] flex items-center gap-2 bg-[#0f172a]/90 border border-slate-700 rounded-full px-3 py-2 backdrop-blur" id="devModePill" title="Toggle Demo Mode">
+        <div class="w-2 h-2 rounded-full bg-slate-500 transition-colors duration-300" id="devDot"></div>
+        <span class="text-xs font-mono font-semibold text-slate-400 tracking-wider">DEV</span>
+        <label class="relative inline-flex items-center cursor-pointer ml-1">
+            <input type="checkbox" id="demoModeToggle" class="sr-only peer" onchange="toggleDemoMode(this.checked)">
+            <div class="w-7 h-4 bg-slate-700 rounded-full peer peer-checked:bg-[#10b981]
+                        after:content-[''] after:absolute after:top-[2px] after:left-[2px]
+                        after:bg-white after:border-white after:border after:rounded-full after:w-3 after:h-3
+                        after:transition-all peer-checked:after:translate-x-3"></div>
+        </label>
+    </div>
+
+    <script src="/static/js/app.js?v={{ now }}"></script>
+    <script>
+        // Sync dev dot colour with toggle state
+        const _devToggle = document.getElementById('demoModeToggle');
+        const _devDot = document.getElementById('devDot');
+        if (_devToggle && _devDot) {
+            _devToggle.addEventListener('change', () => {
+                _devDot.classList.toggle('bg-emerald-500', _devToggle.checked);
+                _devDot.classList.toggle('shadow-[0_0_0_3px_rgba(16,185,129,0.2)]', _devToggle.checked);
+            });
+        }
+    </script>
+</body>
+</html>
